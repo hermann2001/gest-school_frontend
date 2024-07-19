@@ -5,6 +5,7 @@ import Homepage from './pages/Homepage';
 import AdminGenLogin from './pages/AdminGenLogin';
 import ChooseUser from './pages/ChooseUser';
 import AdminDashboard from './pages/AdminDashboard';
+import Logout from './pages/Logout';
 
 console.log({ Homepage, AdminGenLogin, ChooseUser, AdminDashboard });
 
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/chooseUser" element={<ChooseUser />} />
         <Route path="/adminGenLogin" element={<AdminGenLogin />} />
         <Route path="/adminDashboard" element={currentRole === "AdminGen" ? <AdminDashboard /> : <Navigate to="/" />} />
+        <Route path="/logout" element={<Logout />} />
         <Route path='*' element={<Navigate to="/" />} />
       </Routes>
     </Router>
