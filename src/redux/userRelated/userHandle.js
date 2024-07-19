@@ -7,26 +7,25 @@ import {
     authError,
     authLogout,
     doneSuccess,
-    getDeleteSuccess,
+//    getDeleteSuccess,
     getRequest,
     getFailed,
     getError,
 } from './userSlice';
 
-export const loginUser = (fields, role) => async (dispatch) => {
+
+export const loginAdminGen = (fields, role) => async (dispatch) => {
     dispatch(authRequest());
 
-    try {
-        const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/${role}Login`, fields, {
-            headers: { 'Content-Type': 'application/json' },
-        });
-        if (result.data.role) {
-            dispatch(authSuccess(result.data));
-        } else {
-            dispatch(authFailed(result.data.message));
-        }
-    } catch (error) {
-        dispatch(authError(error));
+    // Simule la vérification des informations d'identification
+    const { username, password } = fields;
+    
+    if (username === "adminGen@2134" && password === "123456") {
+        // Simule une réponse de succès
+        dispatch(authSuccess({ username, role }));
+    } else {
+        // Simule une réponse d'échec
+        dispatch(authFailed("Nom d'utilisateur ou mot de passe incorrect"));
     }
 };
 
