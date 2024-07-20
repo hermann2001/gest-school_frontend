@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
 import {
     authRequest,
     stuffAdded,
@@ -13,6 +15,8 @@ import {
     getError,
 } from './userSlice';
 
+const api_url = "http://localhost:8000/"
+
 
 export const loginAdminGen = (fields, role) => async (dispatch) => {
     dispatch(authRequest());
@@ -21,34 +25,58 @@ export const loginAdminGen = (fields, role) => async (dispatch) => {
     const { username, password } = fields;
     
     if (username === "adminGen@2134" && password === "123456") {
+        try {
         // Simule une réponse de succès
-        dispatch(authSuccess({ username, role }));
+            const result = await axios.get(`${api_url}api/connexionAdminGen/connect/AdminC2C`, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            if (result.data.message === 'Connexion réussie') {
+                dispatch(authSuccess({ username, role }));
+            } else {
+                dispatch(authFailed("Erreur de connexion !"));
+            }
+        } catch (error) {
+            // Gestion des erreurs de requête
+            console.error("Erreur lors de la requête :", error);
+            dispatch(authFailed("Erreur de connexion !"));
+        }
     } else {
         // Simule une réponse d'échec
-        dispatch(authFailed("Nom d'utilisateur ou mot de passe incorrect"));
+        dispatch(authFailed("Nom d'utilisateur ou mot de passe incorrect !"));
     }
 };
 
-export const registerUser = (fields, role) => async (dispatch) => {
-    dispatch(authRequest());
-
+export const logoutAdminGen = () => async (dispatch, navigate) => {
     try {
-        const result = await axios.post(`${process.env.REACT_APP_BASE_URL}/${role}Reg`, fields, {
+        // Simule une réponse de succès
+        const result = await axios.get(`${api_url}api/deconnexionAdminGen`, {
             headers: { 'Content-Type': 'application/json' },
         });
-        if (result.data.schoolName) {
-            dispatch(authSuccess(result.data));
-        }
-        else if (result.data.school) {
-            dispatch(stuffAdded());
-        }
-        else {
-            dispatch(authFailed(result.data.message));
+        if (result.data.message === 'Déconnexion réussie') {
+            dispatch(authLogout());
+            navigate('/');
+        } else {
+            dispatch(authFailed("Erreur de déconnexion !"));
         }
     } catch (error) {
-        dispatch(authError(error));
+        // Gestion des erreurs de requête
+        console.error("Erreur lors de la requête :", error);
+        dispatch(authFailed("Erreur de déconnexion !"));
     }
 };
+
+export const registerUser = createAsyncThunk(
+    'user/registerUser',
+    async (fields, { rejectWithValue }) => {
+        try {
+            const response = await axios.post('http://localhost:3001/adminDashboard/SchoolReg', fields);
+            return response.data;
+        } catch (error) {
+            // Extraire le message d'erreur ou autres informations pertinentes
+            return rejectWithValue(error.message);
+        }
+    }
+);
 
 export const logoutUser = () => (dispatch) => {
     dispatch(authLogout());

@@ -4,11 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, Typography, Paper, Checkbox, FormControlLabel, TextField, CssBaseline, IconButton, InputAdornment, CircularProgress, Backdrop } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import bgpic from "../assets/designlogin.jpg"
-import { BlueButton } from '../components/buttonStyles';
+import { BlueButton } from '../../components/buttonStyles';
 import styled from 'styled-components';
-import { loginAdminGen } from '../redux/userRelated/userHandle';
-import Popup from '../components/Popup';
+import { loginAdminGen } from '../../redux/userRelated/userHandle';
+import Popup from '../../components/Popup';
 
 const defaultTheme = createTheme();
 

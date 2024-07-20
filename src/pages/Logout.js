@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { authLogout } from '../redux/userRelated/userSlice';
 import styled from 'styled-components';
+import { logoutAdminGen } from '../redux/userRelated/userHandle';
 
 const Logout = () => {
     const currentUser = useSelector(state => state.user.currentUser);
@@ -11,8 +11,7 @@ const Logout = () => {
     const dispatch = useDispatch();
 
     const handleLogout = () => {
-        dispatch(authLogout());
-        navigate('/');
+        logoutAdminGen(dispatch, navigate);
     };
 
     const handleCancel = () => {
