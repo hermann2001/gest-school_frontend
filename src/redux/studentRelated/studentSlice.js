@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    studentsList: [],
+    schoolList: [],
     loading: false,
     error: null,
     response: null,
@@ -9,7 +9,7 @@ const initialState = {
 };
 
 const studentSlice = createSlice({
-    name: 'student',
+    name: 'school',
     initialState,
     reducers: {
         getRequest: (state) => {
@@ -22,7 +22,7 @@ const studentSlice = createSlice({
             state.statestatus = "added";
         },
         getSuccess: (state, action) => {
-            state.studentsList = action.payload;
+            state.schoolList = action.payload;
             state.loading = false;
             state.error = null;
             state.response = null;

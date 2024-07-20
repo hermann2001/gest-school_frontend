@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../../redux/userRelated/userHandle';
 import Popup from '../../../components/Popup';
@@ -35,19 +35,32 @@ const AddSchool = () => {
 
     const fields = { name, logo, adresse, phone_number, email, password, adminID, role, attendance };
 
+    // const submitHandler = (event) => {
+    //     event.preventDefault();
+    //     setLoader(true);
+
+    //     const formData = new FormData();
+    //     for (const key in fields) {
+    //         formData.append(key, fields[key]);
+    //     }
+    //     if (logo) {
+    //         formData.append('logo', logo);
+    //     }
+
+    //     dispatch(registerUser(formData, role));
+    // };
+
     const submitHandler = (event) => {
         event.preventDefault();
         setLoader(true);
 
-        const formData = new FormData();
-        for (const key in fields) {
-            formData.append(key, fields[key]);
-        }
-        if (logo) {
-            formData.append('logo', logo);
-        }
+        const schoolData = { name, logo, adresse, phone_number, email, password };
 
-        dispatch(registerUser(formData, role));
+        // Simulate API call delay
+        setTimeout(() => {
+            setLoader(false);
+            navigate('/adminDashboard/showSchool', { state: { school: schoolData } });
+        }, 2000);
     };
 
     const handleLogoChange = (event) => {

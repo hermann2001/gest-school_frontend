@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getAllStudents } from '../../../redux/studentRelated/studentHandle';
 import { deleteUser } from '../../../redux/userRelated/userHandle';
 import {
@@ -24,12 +24,15 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Popup from '../../../components/Popup';
 
-const ShowStudents = () => {
+const ShowSchool = () => {
 
+    const location = useLocation();
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { studentsList, loading, error, response } = useSelector((state) => state.student);
+    const { schoolList, loading, error, response } = useSelector((state) => state.school || {}); 
     const { currentUser } = useSelector(state => state.user)
+
+    const schoolData = location.state?.school;
 
     useEffect(() => {
         dispatch(getAllStudents(currentUser._id));
@@ -54,18 +57,18 @@ const ShowStudents = () => {
         //     })
     }
 
-    const studentColumns = [
+    const schoolColumns = [
         { id: 'name', label: 'Name', minWidth: 170 },
         { id: 'rollNum', label: 'Roll Number', minWidth: 100 },
         { id: 'sclassName', label: 'Class', minWidth: 170 },
     ]
 
-    const studentRows = studentsList && studentsList.length > 0 && studentsList.map((student) => {
+    const schoolRows = schoolList && schoolList.length > 0 && schoolList.map((school) => {
         return {
-            name: student.name,
-            rollNum: student.rollNum,
-            sclassName: student.sclassName.sclassName,
-            id: student._id,
+            name: school.name,
+            rollNum: school.rollNum,
+            sclassName: school.sclassName.sclassName,
+            id: school._id,
         };
     })
 
@@ -176,7 +179,7 @@ const ShowStudents = () => {
     const actions = [
         {
             icon: <PersonAddAlt1Icon color="primary" />, name: 'Add New Student',
-            action: () => navigate("/Admin/addstudents")
+            action: () => navigate("/adminDashboard/addSchool")
         },
         {
             icon: <PersonRemoveIcon color="error" />, name: 'Delete All Students',
@@ -198,8 +201,16 @@ const ShowStudents = () => {
                         </Box>
                         :
                         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                            {Array.isArray(studentsList) && studentsList.length > 0 &&
-                                <TableTemplate buttonHaver={StudentButtonHaver} columns={studentColumns} rows={studentRows} />
+                            {schoolData && (
+                                <>
+                                    <h2>{schoolData.name}</h2>
+                                    <p>Adresse: {schoolData.adresse}</p>
+                                    <p>Contact: {schoolData.phone_number}</p>
+                                    <p>Email: {schoolData.email}</p>
+                                </>
+                            )}
+                            {Array.isArray(schoolList) && schoolList.length > 0 &&
+                                <TableTemplate buttonHaver={StudentButtonHaver} columns={schoolColumns} rows={schoolRows} />
                             }
                             <SpeedDialTemplate actions={actions} />
                         </Paper>
@@ -211,4 +222,4 @@ const ShowStudents = () => {
     );
 };
 
-export default ShowStudents;
+export default ShowSchool;

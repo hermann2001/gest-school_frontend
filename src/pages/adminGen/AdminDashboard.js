@@ -14,7 +14,7 @@ import SideBar from './SideBar';
 import Logout from '../Logout';
 
 import AddSchool from './studentRelated/AddSchool';
-import ShowStudents from './studentRelated/ShowStudents';
+import ShowSchool from './studentRelated/ShowSchool';
 import StudentAttendance from './studentRelated/StudentAttendance';
 import StudentExamMarks from './studentRelated/StudentExamMarks';
 import ViewStudent from './studentRelated/ViewStudent';
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
 
                     {/* Student */}
                     <Route path="/adminDashboard/addSchool" element={<AddSchool situation="School" />} />
-                    <Route path="/adminDashboard/students" element={<ShowStudents />} />
+                    <Route path="/adminDashboard/showSchool" element={<ShowSchool />} />
                     <Route path="/Admin/students/student/:id" element={<ViewStudent />} />
                     <Route path="/Admin/students/student/attendance/:id" element={<StudentAttendance situation="Student" />} />
                     <Route path="/Admin/students/student/marks/:id" element={<StudentExamMarks situation="Student" />} />

@@ -7,6 +7,19 @@ import {
     stuffDone
 } from './studentSlice';
 
+
+// Exemple d'action pour obtenir les écoles
+export const getAllSchools = () => async (dispatch) => {
+    dispatch({ type: 'FETCH_SCHOOLS_REQUEST' });
+    try {
+        const response = await fetch('/api/schools');
+        const data = await response.json();
+        dispatch({ type: 'FETCH_SCHOOLS_SUCCESS', payload: data });
+    } catch (error) {
+        dispatch({ type: 'FETCH_SCHOOLS_FAILURE', payload: error });
+    }
+};
+
 export const getAllStudents = (id) => async (dispatch) => {
     dispatch(getRequest());
 
