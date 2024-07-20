@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from "react-router-dom";
 import { getAllStudents } from '../../../redux/studentRelated/studentHandle';
-import { deleteUser } from '../../../redux/userRelated/userHandle';
+import { deleteUser, getAllSchools } from '../../../redux/userRelated/userHandle';
 import {
     Paper, Box, IconButton
 } from '@mui/material';
@@ -32,7 +32,7 @@ const ShowSchool = () => {
     const { schoolList, loading, error, response } = useSelector((state) => state.school || {}); 
     const { currentUser } = useSelector(state => state.user)
 
-    const schoolData = location.state?.school;
+    const schoolData = dispatch(getAllSchools());
 
     useEffect(() => {
         dispatch(getAllStudents(currentUser._id));
@@ -201,14 +201,14 @@ const ShowSchool = () => {
                         </Box>
                         :
                         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                            {schoolData && (
-                                <>
-                                    <h2>{schoolData.name}</h2>
-                                    <p>Adresse: {schoolData.adresse}</p>
-                                    <p>Contact: {schoolData.phone_number}</p>
-                                    <p>Email: {schoolData.email}</p>
-                                </>
-                            )}
+                            {schoolData && schoolData.map((school, index) => (
+                                <div key={index}>
+                                    <h2>{school.name}</h2>
+                                    <p>Adresse: {school.adresse}</p>
+                                    <p>Contact: {school.phone_number}</p>
+                                    <p>Email: {school.email}</p>
+                                </div>
+                            ))}
                             {Array.isArray(schoolList) && schoolList.length > 0 &&
                                 <TableTemplate buttonHaver={StudentButtonHaver} columns={schoolColumns} rows={schoolRows} />
                             }

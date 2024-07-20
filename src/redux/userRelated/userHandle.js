@@ -65,6 +65,37 @@ export const logoutAdminGen = () => async (dispatch, navigate) => {
     }
 };
 
+export const registerSchool = (fields, role) => async (dispatch) => {
+    dispatch(authRequest());
+
+    try {
+        const result = await axios.post(`${api_url}api/createSchool`, fields, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        if (result.data.success) {
+            dispatch(doneSuccess());
+            navigate('/adminDashboard/showSchool');
+        } else {
+            dispatch(authFailed(result.data.message));
+        }
+    } catch (error) {
+        console.error("Erreur lors de la requête :", error);
+        dispatch(authFailed("Erreur d'enregistrement de l'établissement !"));
+    }
+};
+
+export const getAllSchools = (fields) => async (dispatch) => {
+    try {
+        const result = await axios.get(`${api_url}api/allSchools`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        return result.data;
+    } catch (error) {
+        console.error("Erreur lors de la requête :", error);
+        dispatch(authFailed("Erreur d'enregistrement de l'établissement !"));
+    }
+};
+
 export const registerUser = createAsyncThunk(
     'user/registerUser',
     async (fields, { rejectWithValue }) => {

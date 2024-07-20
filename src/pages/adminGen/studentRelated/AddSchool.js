@@ -56,11 +56,15 @@ const AddSchool = () => {
 
         const schoolData = { name, logo, adresse, phone_number, email, password };
 
+        // API call
+        setLoader(true);
+        dispatch(loginAdminGen(schoolData, 'AdminGen', navigate));
+
         // Simulate API call delay
-        setTimeout(() => {
-            setLoader(false);
-            navigate('/adminDashboard/showSchool', { state: { school: schoolData } });
-        }, 2000);
+        // setTimeout(() => {
+        //     setLoader(false);
+        //     navigate('/adminDashboard/showSchool', { state: { school: schoolData } });
+        // }, 2000);
     };
 
     const handleLogoChange = (event) => {
