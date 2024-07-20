@@ -65,12 +65,12 @@ export const logoutAdminGen = () => async (dispatch, navigate) => {
     }
 };
 
-export const registerSchool = (fields, role) => async (dispatch) => {
+export const registerSchool = (schoolData, navigate) => async (dispatch) => {
     dispatch(authRequest());
 
     try {
-        const result = await axios.post(`${api_url}api/createSchool`, fields, {
-            headers: { 'Content-Type': 'application/json' },
+        const result = await axios.post(`${api_url}api/createSchool`, schoolData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
         });
         if (result.data.success) {
             dispatch(doneSuccess());
@@ -83,6 +83,7 @@ export const registerSchool = (fields, role) => async (dispatch) => {
         dispatch(authFailed("Erreur d'enregistrement de l'établissement !"));
     }
 };
+
 
 export const getAllSchools = (fields) => async (dispatch) => {
     try {

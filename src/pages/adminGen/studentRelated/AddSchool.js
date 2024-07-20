@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../../redux/userRelated/userHandle';
+import { registerSchool } from '../../../redux/userRelated/userHandle';
 import Popup from '../../../components/Popup';
 import { underControl } from '../../../redux/userRelated/userSlice';
 import { CircularProgress, TextField, InputAdornment, IconButton } from '@mui/material';
@@ -15,7 +15,7 @@ const AddSchool = () => {
     const navigate = useNavigate()
 
     const userState = useSelector(state => state.user);
-    const { status, currentUser, response, error } = userState;
+    const { status, response, error } = userState;
 
     const [name, setName] = useState('');
     const [logo, setLogo] = useState(null);
@@ -24,48 +24,52 @@ const AddSchool = () => {
     const [email, setEName] = useState('')
     const [password, setPassword] = useState('')
 
-    const adminID = currentUser._id
-    const role = "School"
-    const attendance = []
-
     const [showPassword, setShowPassword] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [message, setMessage] = useState('');
     const [loader, setLoader] = useState(false);
 
-    const fields = { name, logo, adresse, phone_number, email, password, adminID, role, attendance };
+    const validateName = (name) => {
+        const regex = /^[a-zA-Z0-9-_]+$/;
+        return regex.test(name);
+    };
 
-    // const submitHandler = (event) => {
-    //     event.preventDefault();
-    //     setLoader(true);
-
-    //     const formData = new FormData();
-    //     for (const key in fields) {
-    //         formData.append(key, fields[key]);
-    //     }
-    //     if (logo) {
-    //         formData.append('logo', logo);
-    //     }
-
-    //     dispatch(registerUser(formData, role));
-    // };
+    const validatePassword = (password) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return regex.test(password);
+    };
 
     const submitHandler = (event) => {
         event.preventDefault();
         setLoader(true);
 
-        const schoolData = { name, logo, adresse, phone_number, email, password };
 
-        // API call
-        setLoader(true);
-        dispatch(loginAdminGen(schoolData, 'AdminGen', navigate));
+        if (!validateName(name)) {
+            setMessage('Le champ de nom ne doit contenir que des lettres, des chiffres, des tirets et des traits de soulignement.');
+            setShowPopup(true);
+            setLoader(false);
+            return;
+        }
 
-        // Simulate API call delay
-        // setTimeout(() => {
-        //     setLoader(false);
-        //     navigate('/adminDashboard/showSchool', { state: { school: schoolData } });
-        // }, 2000);
+        if (!validatePassword(password)) {
+            setMessage('Le mot de passe doit comporter au moins 8 caractères, contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.');
+            setShowPopup(true);
+            setLoader(false);
+            return;
+        }
+    
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('logo', logo); // Ensure `logo` is a file
+        formData.append('adresse', adresse);
+        formData.append('phone_number', phone_number);
+        formData.append('email', email);
+        formData.append('password', password);
+    
+        console.log("Submitting school data: ", formData);
+        dispatch(registerSchool(formData, navigate));
     };
+    
 
     const handleLogoChange = (event) => {
         setLogo(event.target.files[0]);
