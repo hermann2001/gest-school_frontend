@@ -69,7 +69,9 @@ const ChooseUser = () => {
                     <AccountCircle fontSize="large" />
                   </Box>
                   <StyledTypography>
-                    Administrateur Général
+                    Administrateur 
+                    <br/>
+                    Général
                   </StyledTypography>
                   Connectez-vous en tant qu'Administrateur Général pour accéder
                   au tableau de bord afin de gérer les données de l'application.
@@ -99,7 +101,9 @@ const ChooseUser = () => {
                     <Group fontSize="large" />
                   </Box>
                   <StyledTypography>
-                    Elèves/Parents
+                    Elèves
+                    <br/>
+                    Parents
                   </StyledTypography>
                   Connectez-vous en tant qu'Elèves/Parents pour accéder
                   au tableau de bord afin de gérer les données de l'application.

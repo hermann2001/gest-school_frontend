@@ -198,7 +198,7 @@ const FileInputWrapper = styled.div`
 `;
 
 const StyledButton = styled.label`
-  background-color: #FFC300;
+  background-color: #FFCC25;
   color: white;
   padding: 10px;
   border: none;

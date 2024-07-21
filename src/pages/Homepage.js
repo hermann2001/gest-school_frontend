@@ -4,6 +4,7 @@ import { Container, Grid, Box, Button } from '@mui/material';
 import styled from 'styled-components';
 import Students from "../assets/students.svg";
 import { BlueButton } from '../components/buttonStyles';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const Homepage = () => {
     return (
@@ -32,22 +33,13 @@ const Homepage = () => {
                             </ul>
                         </StyledTitle2>
                     </StyledPaper>
-                </Grid>
-            </Grid>
-
-            <Grid container spacing={0} justifyContent="center">
-                <Grid item xs={12} md={8}>
-                    <StyledBox>
+                    <ButtonWrapper>
                         <StyledLink to="/chooseUser">
-                            <BlueButton variant="contained" fullWidth>
-                                Démarrer
-                            </BlueButton>
+                            <StyledButton variant="contained">
+                                Accéder <ArrowForwardIcon />
+                            </StyledButton>
                         </StyledLink>
-                        <StyledText  style={{ textAlign: 'center' }}>
-                            Sélectionner votre rôle et accéder à votre tableau de bord 
-                            personnalisé (Administrateur Général - Administrateur d'établissement - Élève/Parent).
-                        </StyledText>
-                    </StyledBox>
+                    </ButtonWrapper>
                 </Grid>
             </Grid>
         </StyledContainer>
@@ -64,16 +56,6 @@ const StyledContainer = styled(Container)`
 `;
 
 const StyledPaper = styled.div`
-  padding: 24px;
-`;
-
-const StyledBox = styled(Box)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content:center;
-  gap: 16px;
-  text-align: center;
   padding: 24px;
 `;
 
@@ -118,15 +100,21 @@ const StyledTitle2 = styled.h3`
   }
 `;
 
-const StyledText = styled.p`
-  color:  #2F4BD3;
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 0;
-  letter-spacing: normal;
-  line-height: normal;
-`;
-
 const StyledLink = styled(Link)`
   text-decoration: none;
+`;
+
+const StyledButton = styled(BlueButton)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto; /* Adjust the width as needed */
+  padding: 8px 16px; /* Adjust the padding as needed */
+  gap: 8px; /* Space between text and icon */
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Adjust this value to add space between the button and the content above */
 `;
