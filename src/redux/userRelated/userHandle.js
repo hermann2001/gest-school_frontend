@@ -72,7 +72,7 @@ export const registerSchool = (schoolData, navigate) => async (dispatch) => {
   dispatch(authRequest());
 
   try {
-    const result = await axios.post(`${api_url}api/createSchool`, schoolData, {
+    const result = await axios.post(`${api_url}createSchool`, schoolData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     if (result.data.success) {
@@ -87,17 +87,22 @@ export const registerSchool = (schoolData, navigate) => async (dispatch) => {
   }
 };
 
-export const getAllSchools = (fields) => async (dispatch) => {
+export const getAllSchools = () => async (dispatch) => {
   try {
-    const result = await axios.get(`${api_url}api/allSchools`, {
+    const result = await axios.get(`${api_url}allSchools`, {
       headers: { "Content-Type": "application/json" },
     });
-    return result.data;
+    console.log("Schools data fetched:", result.data);
+    dispatch(getSuccess(result.data)); 
   } catch (error) {
     console.error("Erreur lors de la requête :", error);
-    dispatch(authFailed("Erreur d'enregistrement de l'établissement !"));
+    dispatch(authFailed("Erreur de récupération des établissements !"));
   }
 };
+
+
+
+
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",

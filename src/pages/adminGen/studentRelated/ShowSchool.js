@@ -1,14 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getAllSchools } from "../../../redux/userRelated/userHandle";
 import { Paper, Box, IconButton } from "@mui/material";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import {
-  BlackButton,
-  BlueButton,
-  GreenButton,
-} from "../../../components/buttonStyles";
+import { BlackButton, BlueButton, GreenButton, } from "../../../components/buttonStyles";
 import TableTemplate from "../../../components/TableTemplate";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import SpeedDialTemplate from "../../../components/SpeedDialTemplate";
@@ -26,7 +22,6 @@ import MenuList from "@mui/material/MenuList";
 import Popup from "../../../components/Popup";
 
 const ShowSchool = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { schools, loading, error, response } = useSelector(
@@ -37,6 +32,10 @@ const ShowSchool = () => {
   useEffect(() => {
     dispatch(getAllSchools());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log("Schools state:", schools);
+  }, [schools]);
 
   if (error) {
     console.log(error);
