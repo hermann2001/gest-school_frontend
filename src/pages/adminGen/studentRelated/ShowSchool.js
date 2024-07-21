@@ -72,8 +72,8 @@ const ShowSchool = () => {
             <img
               src={`${process.env.REACT_APP_LOGO_URL}${school.logo}`}
               alt={`${school.name} Logo`}
-              width={70}
-              height={70}
+              width={80}
+              height={80}
             />
           ),
           name: school.name,
