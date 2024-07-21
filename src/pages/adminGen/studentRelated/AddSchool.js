@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../../redux/userRelated/userHandle';
+import { registerSchool, registerUser } from '../../../redux/userRelated/userHandle';
 import Popup from '../../../components/Popup';
 import { underControl } from '../../../redux/userRelated/userSlice';
 import { CircularProgress, TextField, InputAdornment, IconButton } from '@mui/material';
@@ -50,25 +50,36 @@ const AddSchool = () => {
     //     dispatch(registerUser(formData, role));
     // };
 
+    const handleLogoChange = (event) => {
+        setLogo(event.target.files[0]);
+    };
+
+    // useEffect(() => {
+    //     console.log(logo);
+    // }, [logo]);
+
     const submitHandler = (event) => {
         event.preventDefault();
         setLoader(true);
 
-        const schoolData = { name, logo, adresse, phone_number, email, password };
+        const formData = new FormData();
+        formData.append('role', 'AdminGen');
+        formData.append('name', name);
+        formData.append('logo', logo);
+        formData.append('adresse', adresse);
+        formData.append('phone_number', phone_number);
+        formData.append('email', email);
+        formData.append('password', password);
 
         // API call
         setLoader(true);
-        dispatch(loginAdminGen(schoolData, 'AdminGen', navigate));
+        dispatch(registerSchool(formData, navigate));
 
         // Simulate API call delay
         // setTimeout(() => {
         //     setLoader(false);
         //     navigate('/adminDashboard/showSchool', { state: { school: schoolData } });
         // }, 2000);
-    };
-
-    const handleLogoChange = (event) => {
-        setLogo(event.target.files[0]);
     };
 
     useEffect(() => {
