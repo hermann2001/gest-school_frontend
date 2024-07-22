@@ -251,14 +251,14 @@ const FileInputWrapper = styled.div`
 `;
 
 const StyledButton = styled.label`
-  background-color: #ffcc25;
+  background-color: #3B60FE;
   color: white;
   padding: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   &:hover {
-    background-color: #face40;
+    background-color: #89A0FF;
   }
 `;
 

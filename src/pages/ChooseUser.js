@@ -18,7 +18,7 @@ const ChooseUser = () => {
     if (user === "AdminGen") {
       navigate('/adminGenLogin');
     } else if (user === "AdminSch") {
-      navigate('/AdminSchLogin');
+      navigate('/adminEtaLogin');
     } else if (user === "Student") {
       navigate('/StudentLogin');
     }
@@ -31,9 +31,9 @@ const ChooseUser = () => {
   useEffect(() => {
     if (status === 'success' || currentUser !== null) {
       if (currentRole === 'AdminGen') {
-        navigate('/AdminDashboard');
+        navigate('/adminDashboard');
       } else if (currentRole === 'AdminSch') {
-        navigate('/AdminSchDashboard');
+        navigate('/adminEtaDashboard');
       } else if (currentRole === 'Student') {
         navigate('/StudentDashboard');
       }

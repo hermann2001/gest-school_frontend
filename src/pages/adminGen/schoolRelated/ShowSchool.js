@@ -11,7 +11,8 @@ import TableTemplate from "../../../components/TableTemplate";
 import SpeedDialTemplate from "../../../components/SpeedDialTemplate";
 import * as React from "react";
 import Popup from "../../../components/Popup";
-import { AddBusiness, Delete, Refresh } from "@mui/icons-material";
+import { Delete, Refresh } from "@mui/icons-material";
+import SchoolIcon from '@mui/icons-material/School';
 
 const ShowSchool = () => {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ const ShowSchool = () => {
 
   const actions = [
     {
-      icon: <AddBusiness color="primary" />,
+      icon: <SchoolIcon color="primary" />,
       name: "Enregistrer un établissement",
       action: () => navigate("/addSchool"),
     },

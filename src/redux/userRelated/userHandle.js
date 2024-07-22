@@ -138,6 +138,43 @@ export const resendConfirmMail = (id) => async (dispatch) => {
   }
 };
 
+export const loginAdminEta = (fields, role) => async (dispatch) => {
+  dispatch(authRequest());
+
+  // Simule la vérification des informations d'identification
+  const { username, password } = fields;
+
+  if (username === "adminGen@2134" && password === "123456") {
+    try {
+      // Simule une réponse de succès
+      const result = await axios.get(
+        `${api_url}connexionAdminGen/connect/AdminC2C`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (result.data.message === "Connexion réussie") {
+        dispatch(authSuccess({ username, role }));
+      } else {
+        dispatch(authFailed("Erreur de connexion !"));
+      }
+    } catch (error) {
+      // Gestion des erreurs de requête
+      console.error("Erreur lors de la requête :", error);
+      dispatch(authFailed("Erreur de connexion !"));
+    }
+  } else {
+    // Simule une réponse d'échec
+    dispatch(authFailed("Nom d'utilisateur ou mot de passe incorrect !"));
+  }
+};
+
+
+
+
+
+
+
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (fields, { rejectWithValue }) => {
