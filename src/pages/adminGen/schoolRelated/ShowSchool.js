@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getAllSchools } from "../../../redux/userRelated/userHandle";
+import {
+  deleteSchool,
+  getAllSchools,
+  resendConfirmMail,
+} from "../../../redux/userRelated/userHandle";
 import { Paper, IconButton } from "@mui/material";
-import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import TableTemplate from "../../../components/TableTemplate";
 import SpeedDialTemplate from "../../../components/SpeedDialTemplate";
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Popup from "../../../components/Popup";
+import { AddBusiness, Delete, Refresh } from "@mui/icons-material";
 
 const ShowSchool = () => {
   const navigate = useNavigate();
@@ -17,7 +19,6 @@ const ShowSchool = () => {
   const { schools, loading, error, response } = useSelector(
     (state) => state.user
   );
-  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getAllSchools());
@@ -34,27 +35,20 @@ const ShowSchool = () => {
   const [showPopup, setShowPopup] = React.useState(false);
   const [message, setMessage] = React.useState("");
 
-  const deleteHandler = (deleteID, address) => {
-    console.log(deleteID);
-    console.log(address);
-    setMessage("Désolé, la fonction de suppression a été désactivée pour le moment.");
-    setShowPopup(true);
-
-    // dispatch(deleteUser(deleteID, address))
-    //     .then(() => {
-    //         dispatch(getAllStudents(currentUser._id));
-    //     })
+  const deleteHandler = (deleteID) => {
+    dispatch(deleteSchool(deleteID)).then(() => {
+      dispatch(getAllSchools());
+      setMessage("Suppression éffectuée avec succès !");
+      setShowPopup(true);
+    });
   };
 
-  const reconfirmEmailHandler = (email) => {
-    console.log(`Reconfirming email for: ${email}`);
-    setMessage("Désolé, la reconfirmation par e-mail n'est pas encore mise en œuvre.");
-    setShowPopup(true);
-
-    // dispatch(reconfirmEmail(email))
-    //     .then(() => {
-    //         dispatch(getAllSchools());
-    //     })
+  const reconfirmEmailHandler = (schoolId) => {
+    dispatch(resendConfirmMail(schoolId)).then(() => {
+      dispatch(getAllSchools());
+      setMessage("Lien de confirmation renvoyé avec succès !");
+      setShowPopup(true);
+    });
   };
 
   const schoolColumns = [
@@ -69,16 +63,14 @@ const ShowSchool = () => {
   const StudentButtonHaver = ({ row }) => {
     return (
       <>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => reconfirmEmailHandler(row.email)}
-        >
-          Renvoi du lien
-        </Button>
+        {!row.verified && (
+          <IconButton onClick={() => reconfirmEmailHandler(row.id)}>
+            <Refresh color="primary" />
+          </IconButton>
+        )}
 
-        <IconButton onClick={() => deleteHandler(row.id, "School")}>
-          <PersonRemoveIcon color="error" />
+        <IconButton onClick={() => deleteHandler(row.id)}>
+          <Delete color="error" />
         </IconButton>
       </>
     );
@@ -100,15 +92,13 @@ const ShowSchool = () => {
           phone: school.phone_number,
           adresse: school.adresse,
           id: school._id,
-          actions: (
-            <StudentButtonHaver row={school} />
-          ),
+          actions: <StudentButtonHaver row={school} />,
         }))
       : [];
 
   const actions = [
     {
-      icon: <PersonAddIcon color="primary" />,
+      icon: <AddBusiness color="primary" />,
       name: "Enregistrer un établissement",
       action: () => navigate("/addSchool"),
     },
@@ -122,10 +112,7 @@ const ShowSchool = () => {
         <>
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
             {Array.isArray(schools) && schools.length > 0 && (
-              <TableTemplate
-                columns={schoolColumns}
-                rows={schoolRows}
-              />
+              <TableTemplate columns={schoolColumns} rows={schoolRows} />
             )}
             <SpeedDialTemplate actions={actions} />
           </Paper>
@@ -137,7 +124,7 @@ const ShowSchool = () => {
         showPopup={showPopup}
       />
     </>
-  );  
+  );
 };
 
 export default ShowSchool;

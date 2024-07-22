@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerSchool } from "../../../redux/userRelated/userHandle";
 import Popup from "../../../components/Popup";
 import { underControl } from "../../../redux/userRelated/userSlice";
-import { CircularProgress, TextField, InputAdornment, IconButton,} from "@mui/material";
+import {
+  CircularProgress,
+  TextField,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import styled from "styled-components";
 import { GreenButton } from "../../../components/buttonStyles";
@@ -29,14 +34,14 @@ const AddSchool = () => {
   const [message, setMessage] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const validateName = name => {
-    const regex = /^[\p{L}0-9-_]+$/u; 
+  const validateName = (name) => {
+    const regex = /^[\p{L}0-9- ']+$/u;
     return regex.test(name);
   };
-  
+
   const validatePassword = (password) => {
     const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-_/#<>()=:;.,\[\]{}\\])[A-Za-z\d@$!%*?&-_/#<>()=:;.,\[\]{}\\]{8,}$/;
     return regex.test(password);
   };
 
@@ -46,7 +51,7 @@ const AddSchool = () => {
 
     if (!validateName(name)) {
       setMessage(
-        "Le champ de nom ne doit contenir que des lettres, des chiffres, des tirets et des traits de soulignement."
+        "Le champ de nom ne doit contenir que des lettres, des chiffres, des espaces, des tirets et des apostrophes."
       );
       setShowPopup(true);
       setLoader(false);
@@ -74,9 +79,9 @@ const AddSchool = () => {
     // Debugging: Log all the form data values
     console.log("Form Data Values:");
     for (let pair of formData.entries()) {
-    console.log(pair[0] + ': ' + pair[1]);
+      console.log(pair[0] + ": " + pair[1]);
     }
-    
+
     dispatch(registerSchool(formData, navigate));
   };
 
