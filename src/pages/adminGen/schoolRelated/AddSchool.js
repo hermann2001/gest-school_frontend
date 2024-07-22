@@ -29,11 +29,11 @@ const AddSchool = () => {
   const [message, setMessage] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const validateName = (name) => {
-    const regex = /^[a-zA-Z0-9-_]+$/;
+  const validateName = name => {
+    const regex = /^[\p{L}0-9-_]+$/u; 
     return regex.test(name);
   };
-
+  
   const validatePassword = (password) => {
     const regex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

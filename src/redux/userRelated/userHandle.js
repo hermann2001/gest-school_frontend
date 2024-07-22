@@ -77,7 +77,7 @@ export const registerSchool = (schoolData, navigate) => async (dispatch) => {
     });
     if (result.data.success) {
       dispatch(doneSuccess());
-      navigate("/adminDashboard/showSchool");
+      navigate("/showSchool");
     } else {
       dispatch(authFailed(result.data.message));
     }

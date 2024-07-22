@@ -50,7 +50,7 @@ const AdminGenLogin = () => {
 
     useEffect(() => {
         if (status === 'success' && currentUser !== null && currentRole === 'AdminGen') {
-            navigate('/adminDashboard');
+            navigate('/adminDashboard', { replace: true }); 
         } else if (status === 'failed') {
             setMessage(response);
             setShowPopup(true);
@@ -61,7 +61,6 @@ const AdminGenLogin = () => {
             setLoader(false);
         }
     }, [status, currentRole, navigate, response, currentUser]);
-
 
     return (
         <ThemeProvider theme={defaultTheme}>
