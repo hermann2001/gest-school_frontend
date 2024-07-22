@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerSchool } from "../../../redux/userRelated/userHandle";
 import Popup from "../../../components/Popup";
 import { underControl } from "../../../redux/userRelated/userSlice";
-import {
-  CircularProgress,
-  TextField,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
+import { CircularProgress, TextField, InputAdornment, IconButton,} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import styled from "styled-components";
 import { GreenButton } from "../../../components/buttonStyles";
@@ -27,17 +22,18 @@ const AddSchool = () => {
   const [phone_number, setTelName] = useState("");
   const [email, setEName] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("AdminGen");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [message, setMessage] = useState("");
   const [loader, setLoader] = useState(false);
 
-  const validateName = (name) => {
-    const regex = /^[a-zA-Z0-9-_]+$/;
+  const validateName = name => {
+    const regex = /^[\p{L}0-9-_]+$/u; 
     return regex.test(name);
   };
-
+  
   const validatePassword = (password) => {
     const regex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -73,8 +69,14 @@ const AddSchool = () => {
     formData.append("phone_number", phone_number);
     formData.append("email", email);
     formData.append("password", password);
+    formData.append("role", role);
 
-    console.log("Submitting school data: ", formData);
+    // Debugging: Log all the form data values
+    console.log("Form Data Values:");
+    for (let pair of formData.entries()) {
+    console.log(pair[0] + ': ' + pair[1]);
+    }
+    
     dispatch(registerSchool(formData, navigate));
   };
 
@@ -85,7 +87,7 @@ const AddSchool = () => {
   useEffect(() => {
     if (status === "added") {
       dispatch(underControl());
-      navigate(-1);
+      navigate("/adminDashboard/showSchool");
     } else if (status === "failed") {
       setMessage(response);
       setShowPopup(true);

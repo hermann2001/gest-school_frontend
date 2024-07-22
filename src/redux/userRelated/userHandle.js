@@ -77,7 +77,7 @@ export const registerSchool = (schoolData, navigate) => async (dispatch) => {
     });
     if (result.data.success) {
       dispatch(doneSuccess());
-      navigate("/adminDashboard/showSchool");
+      navigate("/showSchool");
     } else {
       dispatch(authFailed(result.data.message));
     }
@@ -87,17 +87,22 @@ export const registerSchool = (schoolData, navigate) => async (dispatch) => {
   }
 };
 
-export const getAllSchools = (fields) => async (dispatch) => {
+export const getAllSchools = () => async (dispatch) => {
   try {
     const result = await axios.get(`${api_url}allSchools`, {
       headers: { "Content-Type": "application/json" },
     });
-    return result.data;
+    console.log("Schools data fetched:", result.data);
+    dispatch(getSuccess(result.data)); 
   } catch (error) {
     console.error("Erreur lors de la requête :", error);
-    dispatch(authFailed("Erreur d'enregistrement de l'établissement !"));
+    dispatch(authFailed("Erreur de récupération des établissements !"));
   }
 };
+
+
+
+
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",

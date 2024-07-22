@@ -143,12 +143,6 @@ const StyledAppBar = styled(AppBar)`
   background-color: #2F4BD3 !important;
 `;
 
-const GridItem = styled(Grid)`
-  display: flex;
-  justify-content: center;
-  margin-top: auto; /* Mettre le contenu au bas de la grille */
-`;
-
 const StyledPaper = styled(Paper)`
   padding: 20px;
   text-align: center;

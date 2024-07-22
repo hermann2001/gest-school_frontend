@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Box, Typography, Paper, TextField, CssBaseline, IconButton, InputAdornment, CircularProgress, Backdrop } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { BlueButton } from '../../components/buttonStyles';
-import styled from 'styled-components';
 import { loginAdminGen } from '../../redux/userRelated/userHandle';
 import Popup from '../../components/Popup';
 
@@ -51,7 +50,7 @@ const AdminGenLogin = () => {
 
     useEffect(() => {
         if (status === 'success' && currentUser !== null && currentRole === 'AdminGen') {
-            navigate('/adminDashboard');
+            navigate('/adminDashboard', { replace: true }); 
         } else if (status === 'failed') {
             setMessage(response);
             setShowPopup(true);
@@ -62,7 +61,6 @@ const AdminGenLogin = () => {
             setLoader(false);
         }
     }, [status, currentRole, navigate, response, currentUser]);
-
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -150,9 +148,3 @@ const AdminGenLogin = () => {
 }
 
 export default AdminGenLogin;
-
-const StyledLink = styled(Link)`
-  margin-top: 9px;
-  text-decoration: none;
-  color: #7f56da;
-`;

@@ -13,13 +13,10 @@ import { AppBar, Drawer } from '../../components/styles';
 import SideBar from './SideBar'; 
 import Logout from '../Logout';
 
-import AddSchool from './studentRelated/AddSchool';
-import ShowSchool from './studentRelated/ShowSchool';
-import StudentAttendance from './studentRelated/StudentAttendance';
-import StudentExamMarks from './studentRelated/StudentExamMarks';
-import ViewStudent from './studentRelated/ViewStudent';
-
-
+import AddSchool from './schoolRelated/AddSchool';
+import ShowSchool from './schoolRelated/ShowSchool';
+import HomeBoard from './schoolRelated/HomeSchool';
+import Notices from './schoolRelated/Notices';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -74,16 +71,13 @@ const AdminDashboard = () => {
             <Box component="main" sx={styles.boxStyled}>
                 <Toolbar />
                 <Routes>
-                    <Route path="/" element={<Navigate to="/adminDashboard" />} />
-
-                    {/* Student */}
-                    <Route path="/adminDashboard/addSchool" element={<AddSchool situation="School" />} />
-                    <Route path="/adminDashboard/showSchool" element={<ShowSchool />} />
-                    <Route path="/Admin/students/student/:id" element={<ViewStudent />} />
-                    <Route path="/Admin/students/student/attendance/:id" element={<StudentAttendance situation="Student" />} />
-                    <Route path="/Admin/students/student/marks/:id" element={<StudentExamMarks situation="Student" />} />
-                    
-                    <Route path="/logout" element={<Logout />} />
+                    <Route path="/" element={<Navigate to="home" />} />
+                    <Route path="home" element={<HomeBoard />} />
+                    <Route path="addSchool" element={<AddSchool situation="School" />} />
+                    <Route path="showSchool" element={<ShowSchool />} />
+                    <Route path="notices" element={<Notices />} />
+                    <Route path="logout" element={<Logout />} />
+                    <Route path="*" element={<Navigate to="home" />} />
                 </Routes>
             </Box>
         </Box>
