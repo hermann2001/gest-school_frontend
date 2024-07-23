@@ -42,7 +42,7 @@ export const loginAdminGen = (fields, role) => async (dispatch) => {
     } catch (error) {
       // Gestion des erreurs de requête
       console.error("Erreur lors de la requête :", error);
-      dispatch(authFailed("Erreur de connexion !"));
+      dispatch(authError(error));
     }
   } else {
     // Simule une réponse d'échec
@@ -141,39 +141,25 @@ export const resendConfirmMail = (id) => async (dispatch) => {
 export const loginAdminEta = (fields, role) => async (dispatch) => {
   dispatch(authRequest());
 
-  // Simule la vérification des informations d'identification
-  const { username, password } = fields;
-
-  if (username === "adminGen@2134" && password === "123456") {
-    try {
-      // Simule une réponse de succès
-      const result = await axios.get(
-        `${api_url}connexionAdminGen/connect/AdminC2C`,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (result.data.message === "Connexion réussie") {
-        dispatch(authSuccess({ username, role }));
-      } else {
-        dispatch(authFailed("Erreur de connexion !"));
+  try {
+    const result = await axios.post(
+      `${api_url}school/connexionAdminSchool`,
+      fields,
+      {
+        headers: { "Content-Type": "application/json" },
       }
-    } catch (error) {
-      // Gestion des erreurs de requête
-      console.error("Erreur lors de la requête :", error);
-      dispatch(authFailed("Erreur de connexion !"));
+    );
+    if (result.data.success) {
+      dispatch(authSuccess(result.data.school));
+    } else {
+      dispatch(authFailed(result.data.message));
     }
-  } else {
-    // Simule une réponse d'échec
-    dispatch(authFailed("Nom d'utilisateur ou mot de passe incorrect !"));
+  } catch (error) {
+    // Gestion des erreurs de requête
+    console.error("Erreur lors de la requête :", error);
+    dispatch(authError(error));
   }
 };
-
-
-
-
-
-
 
 export const registerUser = createAsyncThunk(
   "user/registerUser",

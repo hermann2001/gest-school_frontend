@@ -41,7 +41,7 @@ const AddSchool = () => {
 
   const validatePassword = (password) => {
     const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-_/#<>()=:;.,\[\]{}\\])[A-Za-z\d@$!%*?&-_/#<>()=:;.,\[\]{}\\]{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&-_/#<>()=:;.,\[\]{}\\^])[A-Za-z\d@$!%*?&-_/#<>()=:;.,\[\]{}\\^]{8,}$/;
     return regex.test(password);
   };
 
@@ -98,7 +98,7 @@ const AddSchool = () => {
       setShowPopup(true);
       setLoader(false);
     } else if (status === "error") {
-      setMessage("Connexion échouée");
+      setMessage(error.response.data.message);
       setShowPopup(true);
       setLoader(false);
     }
@@ -251,14 +251,14 @@ const FileInputWrapper = styled.div`
 `;
 
 const StyledButton = styled.label`
-  background-color: #3B60FE;
+  background-color: #3b60fe;
   color: white;
   padding: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   &:hover {
-    background-color: #89A0FF;
+    background-color: #89a0ff;
   }
 `;
 
