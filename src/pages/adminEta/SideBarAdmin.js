@@ -2,8 +2,9 @@ import * as React from 'react';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import HomeIcon from "@mui/icons-material/Home";
-import SchoolIcon from "@mui/icons-material/School";
+import ListIcon from '@mui/icons-material/List';
+import ClassIcon from '@mui/icons-material/Class';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AnnouncementOutlinedIcon from '@mui/icons-material/AnnouncementOutlined';
 import { useSelector } from 'react-redux';
 
@@ -13,28 +14,35 @@ const SideBarAdmin = () => {
     const navigate = useNavigate();
     const { schools } = useSelector((state) => state.user);
 
-    const handleSchoolClick = () => {
-        if (Array.isArray(schools) && schools.length > 0) {
-            navigate("/showSchool");
-        } else {
-            navigate("/addSchool");
-        }
-    };
+    // const handleSchoolClick = () => {
+    //     if (Array.isArray(schools) && schools.length > 0) {
+    //         navigate("/showSchool");
+    //     } else {
+    //         navigate("/addSchool");
+    //     }
+    // };
 
     return (
         <>
-            <ListItemButton component={Link} to="/home">
+            <ListItemButton component={Link} to="/listStudent">
                 <ListItemIcon>
-                    <HomeIcon color={location.pathname.startsWith("/home") ? 'primary' : 'inherit'} />
+                    <ListIcon color={location.pathname.startsWith("/listStudent") ? 'primary' : 'inherit'} />
                 </ListItemIcon>
-                <ListItemText primary="Accueil" />
+                <ListItemText primary="Liste des élèves" />
             </ListItemButton>
 
-            <ListItemButton onClick={handleSchoolClick}>
+            <ListItemButton component={Link} to="/listClass">
                 <ListItemIcon>
-                    <SchoolIcon color={location.pathname.startsWith("/addSchool") || location.pathname.startsWith("/showSchool") ? 'primary' : 'inherit'} />
+                    <ClassIcon color={location.pathname.startsWith("/listClass") ? 'primary' : 'inherit'} />
                 </ListItemIcon>
-                <ListItemText primary="Ecoles" />
+                <ListItemText primary="Liste des classes" />
+            </ListItemButton>
+
+            <ListItemButton component={Link} to="/addStudent">
+                <ListItemIcon>
+                    <PersonAddIcon color={location.pathname.startsWith("/addStudent") ? 'primary' : 'inherit'} />
+                </ListItemIcon>
+                <ListItemText primary="Ajouter un élève" />
             </ListItemButton>
 
             <ListItemButton component={Link} to="/notices">

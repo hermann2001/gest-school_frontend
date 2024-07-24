@@ -195,10 +195,7 @@ const AddSchool = () => {
             style={{
               fontWeight: "bold",
               padding: "10px",
-              marginLeft: "80px",
-              marginRight: "80px",
-              marginTop: "20px",
-              marginBottom: "40px",
+              margin: "20px 80px 40px 80px",
             }}
           >
             {loader ? (

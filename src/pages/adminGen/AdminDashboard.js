@@ -13,10 +13,10 @@ import { AppBar, Drawer } from '../../components/styles';
 import SideBar from './SideBar'; 
 import Logout from '../Logout';
 
-import AddSchool from './schoolRelated/AddSchool';
-import ShowSchool from './schoolRelated/ShowSchool';
-import HomeBoard from './schoolRelated/HomeSchool';
-import Notices from './schoolRelated/Notices';
+import AddSchool from './adminRelated/AddSchool';
+import ShowSchool from './adminRelated/ShowSchool';
+import HomeBoard from './adminRelated/HomeSchool';
+import Notices from './adminRelated/Notices';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();

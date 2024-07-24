@@ -12,7 +12,7 @@ import { AppBar, Drawer } from '../../components/styles';
 
 // import Logout from '../Logout';
 
-// import AddSchool from './schoolRelated/AddSchool';
+import AddStudent from './adminEtaRelated/AddStudent';
 // import ShowSchool from './schoolRelated/ShowSchool';
 // import HomeBoard from './schoolRelated/HomeSchool';
 // import Notices from './schoolRelated/Notices';
@@ -70,15 +70,14 @@ const AdminEtaDashboard = () => {
 
             <Box component="main" sx={styles.boxStyled}>
                 <Toolbar />
-                {/* <Routes>
-                    <Route path="/" element={<Navigate to="home" />} />
-                    <Route path="home" element={<HomeBoard />} />
-                    <Route path="addSchool" element={<AddSchool situation="School" />} />
-                    <Route path="showSchool" element={<ShowSchool />} />
-                    <Route path="notices" element={<Notices />} />
-                    <Route path="logout" element={<Logout />} />
-                    <Route path="*" element={<Navigate to="home" />} />
-                </Routes> */}
+                <Routes>
+                    <Route path="/" element={<Navigate to="listStudent" />} />
+                    {/* <Route path="listStudent" element={<ListStudent />} /> */}
+                    {/* <Route path="listClass" element={<ListClass />} /> */}
+                    <Route path="addStudent" element={<AddStudent situation="Student" />} />
+                    {/* <Route path="notices" element={<Notices />} /> */}
+                    <Route path="*" element={<Navigate to="listStudent" />} />
+                </Routes>
             </Box>
         </Box>
     </>
