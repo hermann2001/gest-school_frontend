@@ -38,13 +38,6 @@ const SideBarAdmin = () => {
                 <ListItemText primary="Liste des classes" />
             </ListItemButton>
 
-            <ListItemButton component={Link} to="/addStudent">
-                <ListItemIcon>
-                    <PersonAddIcon color={location.pathname.startsWith("/addStudent") ? 'primary' : 'inherit'} />
-                </ListItemIcon>
-                <ListItemText primary="Ajouter un élève" />
-            </ListItemButton>
-
             <ListItemButton component={Link} to="/notices">
                 <ListItemIcon>
                     <AnnouncementOutlinedIcon color={location.pathname.startsWith("/notices") ? 'primary' : 'inherit'} />

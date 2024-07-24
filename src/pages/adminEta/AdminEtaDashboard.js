@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { authLogout } from '../../redux/userRelated/userSlice';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, Navigate, Route, Routes } from 'react-router-dom';
+import { authLogout, authSuccess } from '../../redux/userRelated/userSlice';
 import { CssBaseline, Box, Toolbar, Typography, IconButton, List, Divider } from '@mui/material';
 import { RedButton } from '../../components/buttonStyles';
 
@@ -10,17 +9,19 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { AppBar, Drawer } from '../../components/styles';
 
-// import Logout from '../Logout';
-
-import AddStudent from './adminEtaRelated/AddStudent';
-// import ShowSchool from './schoolRelated/ShowSchool';
-// import HomeBoard from './schoolRelated/HomeSchool';
-// import Notices from './schoolRelated/Notices';
+import ListClass from './adminEtaRelated/ListClass';
+import ListStudent from './adminEtaRelated/ListStudent';
 import SideBarAdmin from './SideBarAdmin';
+
+import { getAllSchools } from '../../redux/userRelated/userHandle';
 
 const AdminEtaDashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const user = useSelector((state) => state.user.currentUser);
+  const schools = useSelector((state) => state.user.schools); // Assurez-vous que ce sélecteur correspond à l'état
+  const schoolName = useSelector((state) => state.user.currentUser?.schoolName);
 
   const [open, setOpen] = useState(false);
   const toggleDrawer = () => {
@@ -31,6 +32,22 @@ const AdminEtaDashboard = () => {
     dispatch(authLogout());
     navigate('/chooseUser');
   };
+
+  useEffect(() => {
+    // Déclencher la récupération des écoles seulement si `schools` est vide
+    if (schools.length === 0) {
+      dispatch(getAllSchools());
+    }
+  }, [dispatch, schools]);
+
+  useEffect(() => {
+    if (user && schools.length > 0) {
+      const school = schools.find(school => school.email === user.email);
+      if (school && user.schoolName !== school.name) {
+        dispatch(authSuccess({ ...user, schoolName: school.name }));
+      }
+    }
+  }, [user, schools, dispatch]);
 
   return (
     <>
@@ -48,7 +65,8 @@ const AdminEtaDashboard = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-                        Tableau de bord Administrateur
+                    {schoolName ? `Tableau de bord de ${schoolName}` : "Tableau de bord Administrateur"}
+
                     </Typography>
                     <RedButton color="inherit" onClick={handleLogout} style={{ fontWeight: 'bold' }}>
                         Déconnexion
@@ -72,9 +90,8 @@ const AdminEtaDashboard = () => {
                 <Toolbar />
                 <Routes>
                     <Route path="/" element={<Navigate to="listStudent" />} />
-                    {/* <Route path="listStudent" element={<ListStudent />} /> */}
-                    {/* <Route path="listClass" element={<ListClass />} /> */}
-                    <Route path="addStudent" element={<AddStudent situation="Student" />} />
+                    <Route path="listStudent" element={<ListStudent />} />
+                    <Route path="listClass" element={<ListClass />} />
                     {/* <Route path="notices" element={<Notices />} /> */}
                     <Route path="*" element={<Navigate to="listStudent" />} />
                 </Routes>
