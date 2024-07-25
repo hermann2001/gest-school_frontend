@@ -93,7 +93,6 @@ export const getAllSchools = () => async (dispatch) => {
     const result = await axios.get(`${api_url}allSchools`, {
       headers: { "Content-Type": "application/json" },
     });
-    console.log("Schools data fetched:", result.data);
     dispatch(getSuccess(result.data));
   } catch (error) {
     console.error("Erreur lors de la requête :", error);

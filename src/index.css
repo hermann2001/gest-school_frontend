@@ -23,8 +23,7 @@ a {
 /* FORM */
 .register {
   height: 100vh;
-  display: flex;
-  flex-direction: column;
+  display: block;
   align-items: center;
   justify-content: center;
   /* color: #ffffff; */
@@ -40,7 +39,6 @@ a {
 }
 
 .registerForm {
-  margin-top: -50px;
   display: flex;
   flex-direction: column;
 }

@@ -9,6 +9,9 @@ import {
   TextField,
   InputAdornment,
   IconButton,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import styled from "styled-components";
@@ -26,6 +29,7 @@ const AddSchool = () => {
   const [adresse, setAdrName] = useState("");
   const [phone_number, setTelName] = useState("");
   const [email, setEName] = useState("");
+  const [secondaire, setSecondaire] = useState(true);
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("AdminGen");
 
@@ -69,6 +73,7 @@ const AddSchool = () => {
 
     const formData = new FormData();
     formData.append("name", name);
+    formData.append("secondaire", secondaire);
     formData.append("logo", logo); // Ensure `logo` is a file
     formData.append("adresse", adresse);
     formData.append("phone_number", phone_number);
@@ -76,17 +81,15 @@ const AddSchool = () => {
     formData.append("password", password);
     formData.append("role", role);
 
-    // Debugging: Log all the form data values
-    console.log("Form Data Values:");
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ": " + pair[1]);
-    }
-
     dispatch(registerSchool(formData, navigate));
   };
 
   const handleLogoChange = (event) => {
     setLogo(event.target.files[0]);
+  };
+
+  const handleChangeSec = (event) => {
+    setSecondaire(event.target.value);
   };
 
   useEffect(() => {
@@ -133,7 +136,28 @@ const AddSchool = () => {
               onChange={(event) => setName(event.target.value)}
               autoComplete="name"
               required
+              style={{ marginBottom: "20px" }}
             />
+
+            <Label>Votre Etablissement est :</Label>
+            <StyledRadioField
+              row
+              aria-label="options"
+              name="secondaire"
+              value={secondaire}
+              onChange={handleChangeSec}
+            >
+              <FormControlLabel
+                value={true}
+                control={<Radio />}
+                label="Secondaire"
+              />
+              <FormControlLabel
+                value={false}
+                control={<Radio />}
+                label="Primaire"
+              />
+            </StyledRadioField>
 
             <Label>Adresse</Label>
             <StyledTextField
@@ -143,6 +167,7 @@ const AddSchool = () => {
               onChange={(event) => setAdrName(event.target.value)}
               autoComplete="adresse"
               required
+              style={{ marginBottom: "20px" }}
             />
 
             <Label>Contact de l'établissement</Label>
@@ -153,6 +178,7 @@ const AddSchool = () => {
               onChange={(event) => setTelName(event.target.value)}
               autoComplete="telname"
               required
+              style={{ marginBottom: "20px" }}
             />
 
             <Label>Adresse électronique</Label>
@@ -163,6 +189,7 @@ const AddSchool = () => {
               onChange={(event) => setEName(event.target.value)}
               autoComplete="email"
               required
+              style={{ marginBottom: "20px" }}
             />
 
             <Label>Mot de passe</Label>
@@ -224,6 +251,13 @@ const StyledTextField = styled(TextField)`
   display: block;
 `;
 
+const StyledRadioField = styled(RadioGroup)`
+  width: 70%;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+  display: block;
+`;
+
 const Label = styled.label`
   display: block;
   margin: 10px auto;
@@ -235,7 +269,6 @@ const Label = styled.label`
 `;
 
 const FormContainer = styled.div`
-  margin-top: 200px;
   text-align: center;
 `;
 

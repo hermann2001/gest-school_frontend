@@ -1,11 +1,22 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllSchools } from '../../../redux/userRelated/userHandle';
-import { Grid, Card, CardContent, CardMedia, Typography, Box } from '@mui/material';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllSchools } from "../../../redux/userRelated/userHandle";
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Box,
+} from "@mui/material";
 
 const HomeBoard = () => {
   const dispatch = useDispatch();
   const { schools, loading, error } = useSelector((state) => state.user);
+
+  const nivSchool = (sec) => {
+    return sec ? "Secondaire" : "Primaire";
+  };
 
   useEffect(() => {
     dispatch(getAllSchools());
@@ -33,16 +44,73 @@ const HomeBoard = () => {
                   alt={`${school.name} Logo`}
                 />
                 <CardContent>
-                  <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', fontSize: '30px', color: 'primary.main'}}>
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{
+                      fontWeight: "bold",
+                      fontSize: "30px",
+                      color: "primary.main",
+                    }}
+                  >
                     {school.name}
                   </Typography>
-                  <Typography variant="body2" color="text.primary" sx={{ fontSize: '18px' }}>
-                    <span style={{ textDecoration: 'underline', color: 'secondary.main' }}>Adresse</span> : {school.adresse}                  </Typography>
-                  <Typography variant="body2" color="text.primary" sx={{ fontSize: '18px' }}>
-                    <span style={{ textDecoration: 'underline', color: 'secondary.main' }}>Email</span> : {school.email}
+                  <Typography
+                    variant="body2"
+                    color="text.primary"
+                    sx={{ fontWeight: "bold", fontSize: "18px" }}
+                  >
+                    {nivSchool(school.secondaire)}
                   </Typography>
-                  <Typography variant="body2" color="text.primary" sx={{ fontSize: '18px' }}>
-                    <span style={{ textDecoration: 'underline', color: 'secondary.main' }}>Contact</span> : +229 {school.phone_number}
+                  <Typography
+                    variant="body2"
+                    color="text.primary"
+                    sx={{ fontSize: "18px" }}
+                  ></Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.primary"
+                    sx={{ fontSize: "18px" }}
+                  >
+                    <span
+                      style={{
+                        textDecoration: "underline",
+                        color: "secondary.main",
+                      }}
+                    >
+                      Adresse
+                    </span>{" "}
+                    : {school.adresse}{" "}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.primary"
+                    sx={{ fontSize: "18px" }}
+                  >
+                    <span
+                      style={{
+                        textDecoration: "underline",
+                        color: "secondary.main",
+                      }}
+                    >
+                      Email
+                    </span>{" "}
+                    : {school.email}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.primary"
+                    sx={{ fontSize: "18px" }}
+                  >
+                    <span
+                      style={{
+                        textDecoration: "underline",
+                        color: "secondary.main",
+                      }}
+                    >
+                      Contact
+                    </span>{" "}
+                    : +229 {school.phone_number}
                   </Typography>
                 </CardContent>
               </Card>

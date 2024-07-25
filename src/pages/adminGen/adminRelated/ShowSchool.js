@@ -12,7 +12,7 @@ import SpeedDialTemplate from "../../../components/SpeedDialTemplate";
 import * as React from "react";
 import Popup from "../../../components/Popup";
 import { Delete, Refresh } from "@mui/icons-material";
-import SchoolIcon from '@mui/icons-material/School';
+import SchoolIcon from "@mui/icons-material/School";
 
 const ShowSchool = () => {
   const navigate = useNavigate();
@@ -24,10 +24,6 @@ const ShowSchool = () => {
   useEffect(() => {
     dispatch(getAllSchools());
   }, [dispatch]);
-
-  useEffect(() => {
-    console.log("Schools state:", schools);
-  }, [schools]);
 
   if (error) {
     console.log(error);
@@ -55,6 +51,7 @@ const ShowSchool = () => {
   const schoolColumns = [
     { id: "logo", label: "Logo", maxWidth: 170 },
     { id: "name", label: "Etablissement", minWidth: 200 },
+    { id: "ecole", label: "École", maxWidth: 100 },
     { id: "email", label: "E-mail", minWidth: 170 },
     { id: "phone", label: "Téléphone", minWidth: 170 },
     { id: "adresse", label: "Adresse", minWidth: 200 },
@@ -89,6 +86,7 @@ const ShowSchool = () => {
             />
           ),
           name: school.name,
+          ecole: school.secondaire ? "Secondaire" : "Primaire",
           email: school.email,
           phone: school.phone_number,
           adresse: school.adresse,
