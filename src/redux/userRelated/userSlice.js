@@ -19,6 +19,8 @@ const userSlice = createSlice({
   reducers: {
     authRequest: (state) => {
       state.status = "loading";
+      state.loading = true;
+      state.error = null;
     },
     underControl: (state) => {
       state.status = "idle";
@@ -41,6 +43,8 @@ const userSlice = createSlice({
     authFailed: (state, action) => {
       state.status = "failed";
       state.response = action.payload;
+      state.loading = false;
+      state.error = action.payload;
     },
     authError: (state, action) => {
       state.status = "error";
@@ -66,12 +70,22 @@ const userSlice = createSlice({
       state.error = null;
       state.response = null;
     },
+    getClasseSuccess: (state, action) => {
+      state.classes = action.payload;
+      state.loading = false;
+      state.error = null;
+      state.response = null;
+    },
     getDeleteSuccess: (state) => {
       state.loading = false;
       state.error = null;
       state.response = null;
     },
-
+    addClassSuccess: (state) => {
+      state.loading = false;
+      state.error = null;
+      state.response = null;
+    },
     getRequest: (state) => {
       state.loading = true;
     },
@@ -79,6 +93,10 @@ const userSlice = createSlice({
       state.response = action.payload;
       state.loading = false;
       state.error = null;
+    },
+    getError: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
     },
     sendSuccess: (state, action) => {
       state.response = action.payload;
@@ -105,7 +123,9 @@ export const {
   authLogout,
   doneSuccess,
   getSuccess,
+  getClasseSuccess,
   getDeleteSuccess,
+  addClassSuccess,
   getRequest,
   getFailed,
   sendSuccess,

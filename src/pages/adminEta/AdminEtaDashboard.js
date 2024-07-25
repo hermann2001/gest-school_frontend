@@ -20,7 +20,7 @@ const AdminEtaDashboard = () => {
   const navigate = useNavigate();
 
   const user = useSelector((state) => state.user.currentUser);
-  const schools = useSelector((state) => state.user.schools); // Assurez-vous que ce sélecteur correspond à l'état
+  const schools = useSelector((state) => state.user.schools); 
   const schoolName = useSelector((state) => state.user.currentUser?.schoolName);
 
   const [open, setOpen] = useState(false);
@@ -34,7 +34,6 @@ const AdminEtaDashboard = () => {
   };
 
   useEffect(() => {
-    // Déclencher la récupération des écoles seulement si `schools` est vide
     if (schools.length === 0) {
       dispatch(getAllSchools());
     }

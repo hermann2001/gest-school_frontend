@@ -15,6 +15,8 @@ import {
   getError,
   getSuccess,
   sendSuccess,
+  addClassSuccess,
+  getClasseSuccess,
 } from "./userSlice";
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -160,100 +162,34 @@ export const loginAdminEta = (fields, role) => async (dispatch) => {
   }
 };
 
-export const registerUser = createAsyncThunk(
-  "user/registerUser",
-  async (fields, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3001/adminDashboard/SchoolReg",
-        fields
-      );
-      return response.data;
-    } catch (error) {
-      // Extraire le message d'erreur ou autres informations pertinentes
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const logoutUser = () => (dispatch) => {
-  dispatch(authLogout());
-};
-
-export const getUserDetails = (id, address) => async (dispatch) => {
-  dispatch(getRequest());
-
-  try {
-    const result = await axios.get(
-      `${process.env.REACT_APP_BASE_URL}/${address}/${id}`
-    );
-    if (result.data) {
-      dispatch(getSuccess(result.data));
-    }
-  } catch (error) {
-    dispatch(getError(error));
-  }
-};
-
-// export const deleteUser = (id, address) => async (dispatch) => {
-//     dispatch(getRequest());
-
-//     try {
-//         const result = await axios.delete(`${process.env.REACT_APP_BASE_URL}/${address}/${id}`);
-//         if (result.data.message) {
-//             dispatch(getFailed(result.data.message));
-//         } else {
-//             dispatch(getDeleteSuccess());
-//         }
-//     } catch (error) {
-//         dispatch(getError(error));
-//     }
-// }
-
-// export const deleteUser = (id, address) => async (dispatch) => {
-//   dispatch(getRequest());
-//   dispatch(getFailed("Sorry the delete function has been disabled for now."));
-// };
-
-export const updateUser = (fields, id, address) => async (dispatch) => {
-  dispatch(getRequest());
-
-  try {
-    const result = await axios.put(
-      `${process.env.REACT_APP_BASE_URL}/${address}/${id}`,
-      fields,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    if (result.data.schoolName) {
-      dispatch(authSuccess(result.data));
-    } else {
-      dispatch(doneSuccess(result.data));
-    }
-  } catch (error) {
-    dispatch(getError(error));
-  }
-};
-
-export const addStuff = (fields, address) => async (dispatch) => {
+export const addClass = (classeData, id) => async (dispatch) => {
   dispatch(authRequest());
 
   try {
-    const result = await axios.post(
-      `${process.env.REACT_APP_BASE_URL}/${address}Create`,
-      fields,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-
-    if (result.data.message) {
-      dispatch(authFailed(result.data.message));
+    const result = await axios.post(`${api_url}addClasse/${id}`, classeData, {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!result.data.success) {
+      dispatch(getFailed(result.data.message));
     } else {
-      dispatch(stuffAdded(result.data));
+      dispatch(addClassSuccess());
     }
   } catch (error) {
-    dispatch(authError(error));
+    const errorMessage = error.response?.data?.message || error.message;
+    dispatch(getError({ message: errorMessage }));
+  }
+};
+
+
+export const getClasses = (id) => async (dispatch) => {
+  try {
+    const result = await axios.get(`${api_url}getClasses/${id}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    dispatch(getClasseSuccess(result.data));
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    const errorMessage = error.response?.data?.message || error.message;
+    dispatch(authFailed({ message: errorMessage }));
   }
 };
