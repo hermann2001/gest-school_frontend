@@ -29,7 +29,7 @@ const AddSchool = () => {
   const [adresse, setAdrName] = useState("");
   const [phone_number, setTelName] = useState("");
   const [email, setEName] = useState("");
-  const [secondaire, setSecondaire] = useState(true);
+  const [secondaire, setSecondaire] = useState(1);
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("AdminGen");
 
@@ -148,12 +148,12 @@ const AddSchool = () => {
               onChange={handleChangeSec}
             >
               <FormControlLabel
-                value={true}
+                value="1"
                 control={<Radio />}
                 label="Secondaire"
               />
               <FormControlLabel
-                value={false}
+                value="0"
                 control={<Radio />}
                 label="Primaire"
               />
