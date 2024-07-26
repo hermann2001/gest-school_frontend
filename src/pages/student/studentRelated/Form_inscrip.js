@@ -39,8 +39,6 @@ const Form_inscrip = () => {
         event.preventDefault();
         setLoader(true);
       
-        // Validation (si nécessaire)
-        // Exemple: validation de l'email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
           setMessage("Veuillez entrer une adresse email valide.");
