@@ -31,7 +31,7 @@ const ListStudent = () => {
 
     return (
         <Box sx={{ p: 3 }}>
-            <Card sx={{ mb: 2, backgroundColor: '#107AEE', color: 'white', display: 'flex', alignItems: 'center' }}>
+            <Card sx={{ mb: 2, backgroundColor: '#0E70DB', color: 'white', display: 'flex', alignItems: 'center' }}>
                 <PlayArrowIcon sx={{ mr: 2 }}/>
                 <Typography variant="h5">
                     Liste des élèves par niveau et année scolaire

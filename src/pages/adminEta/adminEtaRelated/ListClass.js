@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Typography, Box, TextField, Card, CardContent, CardActionArea, IconButton, Grid } from '@mui/material';
+import { Button, Typography, Box, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Card, CardContent, TableSortLabel, IconButton, CardActionArea } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { addClass, getAllSchools, getClasses } from '../../../redux/userRelated/userHandle';
@@ -19,7 +19,6 @@ const ListClass = () => {
     const [message, setMessage] = useState("");
 
     const currentUser = useSelector((state) => state.user.currentUser);
-
     const currentRole = useSelector((state) => state.user.currentRole);
     const schoolType = currentUser?.secondaire;
 
@@ -69,15 +68,40 @@ const ListClass = () => {
             dispatch(getClasses(currentUser?.id));
         }).finally(() => {
             setLoader(false);
+            setClassName("");
+            setClassSerie("");
+            setClassSize("");
+            setShowForm(false); 
         });
-        setShowForm(false); 
     };
-    
+    const classesByLevel = Array.isArray(classes) ? classes.reduce((acc, classItem) => {
+        if (!acc[classItem.level]) {
+            acc[classItem.level] = [];
+        }
+        acc[classItem.level].push(classItem);
+        return acc;
+    }, {}) : {};
+
+    const levelOrder = [
+        "Maternelle", "CI", "CP", "CE1", "CE2", "CM1", "CM2",
+        "6e", "5e", "4e", "3e", "2nde", "1ere", "Tle"
+    ];
+
+    const sortClassesByLevel = (classes) => {
+        return Object.keys(classes)
+            .sort((a, b) => levelOrder.indexOf(a) - levelOrder.indexOf(b))
+            .reduce((sortedClasses, level) => {
+                sortedClasses[level] = classes[level];
+                return sortedClasses;
+            }, {});
+    };
+
+    const sortedClassesByLevel = sortClassesByLevel(classesByLevel);
 
     return (
         <>
         <Box sx={{ p: 3 }}>
-            <Card sx={{ mb: 2, backgroundColor: '#107AEE', color: 'white', display: 'flex', alignItems: 'center' }}>
+            <Card sx={{ mb: 4, backgroundColor: '#0E70DB', color: 'white', display: 'flex', alignItems: 'center' }}>
                 <PlayArrowIcon sx={{ mr: 2 }}/>
                 <Typography variant="h5">
                     Créer les classes de l'établissement 
@@ -86,11 +110,11 @@ const ListClass = () => {
             
             <Box sx={{ mb: 5, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                 {categories[categoryKey]?.map((level) => (
-                    <Card key={level} sx={{ minWidth: 164 }}>
+                    <Card key={level} sx={{ minWidth: 163 }}>
                         <CardActionArea onClick={() => handleLevelClick(level)}>
                             <CardContent>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Typography variant="h6">{level}</Typography>
+                                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{level}</Typography>
                                     <IconButton size="small">
                                         <AddIcon />
                                     </IconButton>
@@ -108,7 +132,7 @@ const ListClass = () => {
                             Ajouter une classe pour la {selectedLevel}
                         </Typography>
                         <Box sx={{ width: '100%' }}>
-                            <TextField fullWidth type="text" label="Niveau d'étude" value={selectedLevel} sx={{ mb: 2 }} />
+                            <TextField fullWidth type="text" label="Niveau d'étude" value={selectedLevel} sx={{ mb: 2, display: 'none' }} />
                             <TextField fullWidth type="text" label="Nom de la classe" value={className} onChange={(e) => setClassName(e.target.value)} sx={{ mb: 2 }} required />
                             <TextField fullWidth type="text" label="Série" value={classSerie} onChange={(e) => setClassSerie(e.target.value)} sx={{ mb: 2 }} />
                             <TextField fullWidth type="number" label="Effectif" value={classSize} onChange={(e) => setClassSize(e.target.value)} sx={{ mb: 2 }} required />
@@ -120,31 +144,60 @@ const ListClass = () => {
                 </Card>
             )}
 
-            <Card sx={{ mt: 3, mb: 2, backgroundColor: '#107AEE', color: 'white', display: 'flex', alignItems: 'center' }}>
+            <Card sx={{ mt: 3, mb: 3, backgroundColor: '#0E70DB', color: 'white', display: 'flex', alignItems: 'center' }}>
                 <PlayArrowIcon sx={{ mr: 2 }}/>
                 <Typography variant="h5">
                 Classes disponibles
                 </Typography>
             </Card>
             
-            {Array.isArray(classes) && classes.length === 0 ? (
+            {Object.keys(sortedClassesByLevel).length === 0 ? (
                 <Typography variant="h6" color="red" align="center" sx={{ mt: 5 }}>
                     Aucune classe disponible !
                 </Typography>
             ) : (
-                <Grid container spacing={2}>
-                    {classes?.map((classItem) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={classItem.id}>
-                            <Card sx={{ mb: 2 }}>
-                                <CardContent>
-                                    <Typography variant="h6">{classItem.level} - {classItem.name}</Typography>
-                                    <Typography variant="body1">Effectif: {classItem.effectif}</Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
+                <TableContainer component={Card} sx={{ mt: 2 }}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ borderRight: '1px solid #ccc' }} />
+                                {categories[categoryKey]?.map((level) => (
+                                    <TableCell key={level} align="center" sx={{ borderRight: '1px solid #ccc', fontWeight: 'bold' }}>
+                                        {level}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell sx={{ borderRight: '1px solid #ccc', fontWeight: 'bold' }}>Classes 
+                                    <br />
+                                    et
+                                    <br />
+                                    Effectif
+                                </TableCell>
+                                {categories[categoryKey]?.map((level) => (
+                                    <TableCell key={level} align="center" sx={{ borderRight: '1px solid #ccc' }}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                            {sortedClassesByLevel[level]?.map((classItem) => (
+                                                <Card key={classItem.id} sx={{ minWidth: 120, maxWidth: 150, mb: 2 }}>
+                                                    <CardContent sx={{ backgroundColor: '#0E70DB', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 1 }}>
+                                                        <Typography sx={{ fontWeight: 'bold' }}>{classItem.name}</Typography>
+                                                    </CardContent>
+                                                    <CardContent sx={{ backgroundColor: '#FFFFFF', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <Typography sx={{ fontWeight: 'bold'}}>{classItem.effectif} places</Typography>
+                                                    </CardContent>
+                                                </Card>
+                                            ))}
+                                        </Box>
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             )}
+
         </Box>
         <Popup
             message={message}

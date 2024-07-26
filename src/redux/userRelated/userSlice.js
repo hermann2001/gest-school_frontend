@@ -10,6 +10,7 @@ const initialState = {
   response: null,
   darkMode: true,
   schools: [],
+  classes: [],
   loading: false,
 };
 

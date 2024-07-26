@@ -7,6 +7,8 @@ import AdminDashboard from './pages/adminGen/AdminDashboard';
 
 import AdminEtaLogin from './pages/adminEta/AdminEtaLogin';
 import AdminEtaDashboard from './pages/adminEta/AdminEtaDashboard';
+
+import StudentDashboard  from './pages/student/StudentDashboard';
 import ChooseUser from './pages/ChooseUser';
 
 const App = () => {
@@ -22,6 +24,7 @@ const App = () => {
             <Route path="/chooseUser" element={<ChooseUser />} />
             <Route path="/adminGenLogin" element={<AdminGenLogin />} />
             <Route path="/adminEtaLogin" element={<AdminEtaLogin />} />
+            <Route path="/*" element={<StudentDashboard />} />
             <Route path="*" element={<Navigate to="/" />} />
           </>
         ) : currentRole === "AdminGen" ? (

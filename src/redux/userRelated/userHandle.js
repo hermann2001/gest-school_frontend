@@ -193,3 +193,21 @@ export const getClasses = (id) => async (dispatch) => {
     dispatch(authFailed({ message: errorMessage }));
   }
 };
+
+// export const registerStudent = (classeData, id) => async (dispatch) => {
+//   dispatch(authRequest());
+
+//   try {
+//     const result = await axios.post(`${api_url}addClasse/${id}`, classeData, {
+//       headers: { "Content-Type": "application/json" },
+//     });
+//     if (!result.data.success) {
+//       dispatch(getFailed(result.data.message));
+//     } else {
+//       dispatch(addClassSuccess());
+//     }
+//   } catch (error) {
+//     const errorMessage = error.response?.data?.message || error.message;
+//     dispatch(getError({ message: errorMessage }));
+//   }
+// };

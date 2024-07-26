@@ -1,14 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSchools } from "../../../redux/userRelated/userHandle";
-import {
-  Grid,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Box,
-} from "@mui/material";
+import { Grid, Card, CardContent, CardMedia, Typography, Box, } from "@mui/material";
 
 const HomeBoard = () => {
   const dispatch = useDispatch();
