@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Navigate, Route, Routes } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { authLogout } from '../../redux/userRelated/userSlice';
-import { CssBaseline, Box, Toolbar, Typography, IconButton, List, Divider } from '@mui/material';
+import { CssBaseline, Box, Toolbar, Typography, IconButton, List, Divider,Container  } from '@mui/material';
 import { RedButton } from '../../components/buttonStyles';
+
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -11,6 +12,10 @@ import { AppBar, Drawer } from '../../components/styles';
 
 import Inscription from './studentRelated/Inscription';
 import Form_inscrip from './studentRelated/Form_inscrip';
+import Reinscription from '../../components/Fonctions/reinscription';
+import Historique from '../../components/Fonctions/historique';
+import Scolarisation from '../../components/Fonctions/scolarite';
+import Consulter from '../../components/Fonctions/consulter';
 import SideBarStudent from './SideBarStudent';
 
 const StudentDashboard = () => {
@@ -71,6 +76,10 @@ const StudentDashboard = () => {
                     <Route path="/" element={<Navigate to="inscription" />} />
                     <Route path="inscription" element={<Inscription />} />
                     <Route path="formulaire_inscription" element={<Form_inscrip />} />
+                    <Route path="reinscription" element={<Reinscription />} />
+                    <Route path="historique" element={<Historique />} />
+                    <Route path="scolarite" element={<Scolarisation />} />
+                    <Route path="consulter" element={<Consulter />} />
                     {/* <Route path="notices" element={<Notices />} /> */}
                     <Route path="*" element={<Navigate to="inscription" />} />
                 </Routes>
@@ -84,27 +93,34 @@ export default StudentDashboard;
 
 const styles = {
     boxStyled: {
-        backgroundColor: (theme) =>
-            theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-        flexGrow: 1,
-        height: '100vh',
-        overflow: 'auto',
+      backgroundColor: (theme) =>
+        theme.palette.mode === 'light'
+          ? theme.palette.grey[100]
+          : theme.palette.grey[900],
+      flexGrow: 1,
+      height: '100vh',
+      overflow: 'auto',
+      padding: 10, // Padding for the main content area
+      transition: 'margin 0.3s', // Smooth transition when the drawer is toggled
     },
     toolBarStyled: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        px: [1],
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      px: [1],
     },
     drawerStyled: {
-        display: "flex"
+      width: 240,
+      flexShrink: 0,
+      '& .MuiDrawer-paper': {
+        width: 240,
+        boxSizing: 'border-box',
+      },
     },
     hideDrawer: {
+      display: 'none',
+      '@media (min-width: 600px)': {
         display: 'flex',
-        '@media (max-width: 600px)': {
-            display: 'none',
-        },
+      },
     },
 }
