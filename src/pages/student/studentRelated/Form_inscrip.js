@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Button, Card, CardContent, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { registerStudent } from '../../../redux/userRelated/userHandle';
+import Popup from '../../../components/Popup';
+import { useDispatch, useSelector } from 'react-redux';
 
 const getAcademicYears = (numberOfYears) => {
     const currentYear = new Date().getFullYear();
@@ -15,22 +18,27 @@ const getAcademicYears = (numberOfYears) => {
 };
 
 const Form_inscrip = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const { actionType, schoolName, niveau } = location.state || {};
+    const { actionType, schoolName, niveau, schoolId } = location.state || {};
+
+    const { status, eleve, eleveClasse, response, error } = useSelector(
+        (state) => state.user
+    );
 
     const [nom, setNom] = useState("");
     const [prenoms, setPrenoms] = useState("");
-    const [sexe, setSexe] = useState("");
-    const [dateNaissance, setDateNaissance] = useState("");
+    const [sexe, setSexe] = useState(1);
+    const [birthday, setDateNaissance] = useState("");
     const [adresse, setAdresse] = useState("");
-    const [niv, setNiveau] = useState("");
+    const [level, setNiveau] = useState("");
     const [serie, setSerie] = useState("");
-    const [anneeAcademique, setAnneeAcademique] = useState("");
-    const [nomPere, setNomPere] = useState("");
-    const [nomMere, setNomMere] = useState("");
-    const [email, setEmail] = useState("");
-    const [contactParents, setContactParents] = useState("");
+    const [academic_year, setAnneeAcademique] = useState("");
+    const [name_pere, setNomPere] = useState("");
+    const [name_mere, setNomMere] = useState("");
+    const [parent_mail, setEmail] = useState("");
+    const [parent_telephone, setContactParents] = useState("");
     const [loader, setLoader] = useState(false);
     const [message, setMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
@@ -40,42 +48,47 @@ const Form_inscrip = () => {
         setLoader(true);
       
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(parent_mail)) {
           setMessage("Veuillez entrer une adresse email valide.");
           setShowPopup(true);
           setLoader(false);
           return;
         }
       
-        // Préparer les données à envoyer
         const formData = {
           nom,
           prenoms,
           sexe,
-          dateNaissance,
+          birthday,
           adresse,
-          niv,
+          level,
           serie,
-          anneeAcademique,
-          nomPere,
-          nomMere,
-          email,
-          contactParents,
+          academic_year,
+          name_pere,
+          name_mere,
+          parent_mail,
+          parent_telephone,
         };
       
-        // dispatch(registerStudent(formData))
-        //   .then(() => {
-        //     setMessage("Inscription réussie !");
-        //     setShowPopup(true);
-        //   })
-        //   .catch((error) => {
-        //     setMessage(`Erreur: ${error.message}`);
-        //     setShowPopup(true);
-        //   })
-        //   .finally(() => {
-        //     setLoader(false);
-        //   });
+        dispatch(registerStudent(formData, schoolId));
       };
+
+      useEffect(() => {
+        if (
+          status === "success"
+        ) {
+            setMessage("Inscription réussie !");
+            setShowPopup(true);
+        } else if (status === "failed") {
+          setMessage(response);
+          setShowPopup(true);
+          setLoader(false);
+        } else if (status === "error") {
+          setMessage(error.response.data.message);
+          setShowPopup(true);
+          setLoader(false);
+        }
+      }, [status, eleve, navigate, response, eleveClasse]);
       
 
 
@@ -104,15 +117,15 @@ const Form_inscrip = () => {
                                 <FormControl fullWidth sx={{ mb: 2 }}>
                                     <InputLabel id="sex-label">Sexe</InputLabel>
                                     <Select labelId="sex-label" id="sex-select" label="Sexe" value={sexe} onChange={(e) => setSexe(e.target.value)}required>
-                                        <MenuItem value="male">Masculin</MenuItem>
-                                        <MenuItem value="female">Féminin</MenuItem>
+                                        <MenuItem value="1">Masculin</MenuItem>
+                                        <MenuItem value="0">Féminin</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <TextField label="Date de Naissance" type="date" variant="outlined" fullWidth sx={{ mb: 2 }} InputLabelProps={{ shrink: true }} value={dateNaissance} onChange={(e) => setDateNaissance(e.target.value)} required/>
+                                <TextField label="Date de Naissance" type="date" variant="outlined" fullWidth sx={{ mb: 2 }} InputLabelProps={{ shrink: true }} value={birthday} onChange={(e) => setDateNaissance(e.target.value)} required/>
                                 <TextField label="Adresse" variant="outlined" fullWidth sx={{ mb: 2 }}  value={adresse} onChange={(e) => setAdresse(e.target.value)} required/>
                                 <FormControl fullWidth sx={{ mb: 2 }}>
                                     <InputLabel id="grade-label">Niveau</InputLabel>
-                                    <Select labelId="grade-label" id="grade-select" label="Niveau" value={niv} onChange={(e) => setNiveau(e.target.value)} required>
+                                    <Select labelId="grade-label" id="grade-select" label="Niveau" value={level} onChange={(e) => setNiveau(e.target.value)} required>
                                         <MenuItem value={1}>Maternelle</MenuItem><MenuItem value={2}>CI</MenuItem><MenuItem value={3}>CP</MenuItem>
                                         <MenuItem value={4}>CE1</MenuItem><MenuItem value={5}>CE2</MenuItem><MenuItem value={6}>CM1</MenuItem>
                                         <MenuItem value={7}>CM2</MenuItem><MenuItem value={8}>6e</MenuItem><MenuItem value={9}>5e</MenuItem>
@@ -134,16 +147,16 @@ const Form_inscrip = () => {
                                 </FormControl>
                                 <FormControl fullWidth sx={{ mb: 2 }}>
                                     <InputLabel id="academic-year-label">Année académique</InputLabel>
-                                    <Select labelId="academic-year-label" id="academic-year-select" label="Année académique"  value={anneeAcademique} onChange={(e) => setAnneeAcademique(e.target.value)} required>
+                                    <Select labelId="academic-year-label" id="academic-year-select" label="Année académique"  value={academic_year} onChange={(e) => setAnneeAcademique(e.target.value)} required>
                                         {getAcademicYears(1).map((year) => (
                                             <MenuItem key={year} value={year}>{year}</MenuItem>
                                         ))}
                                     </Select>
                                 </FormControl>
-                                <TextField label="Nom et prénoms du père" variant="outlined" fullWidth sx={{ mb: 2 }} value={nomPere} onChange={(e) => setNomPere(e.target.value)} required/>
-                                <TextField label="Nom et prénoms de la mère" variant="outlined" fullWidth sx={{ mb: 2 }} value={nomMere} onChange={(e) => setNomMere(e.target.value)} required/>
-                                <TextField label="Adresse mail" variant="outlined" fullWidth sx={{ mb: 2 }} value={email} onChange={(e) => setEmail(e.target.value)} required/>
-                                <TextField label="Contact des parents" variant="outlined" fullWidth sx={{ mb: 2 }}  value={contactParents} onChange={(e) => setContactParents(e.target.value)} required/>
+                                <TextField label="Nom et prénoms du père" variant="outlined" fullWidth sx={{ mb: 2 }} value={name_pere} onChange={(e) => setNomPere(e.target.value)} required/>
+                                <TextField label="Nom et prénoms de la mère" variant="outlined" fullWidth sx={{ mb: 2 }} value={name_mere} onChange={(e) => setNomMere(e.target.value)} required/>
+                                <TextField label="Adresse mail" variant="outlined" fullWidth sx={{ mb: 2 }} value={parent_mail} onChange={(e) => setEmail(e.target.value)} required/>
+                                <TextField label="Contact des parents" type="number" variant="outlined" fullWidth sx={{ mb: 2 }}  value={parent_telephone} onChange={(e) => setContactParents(e.target.value)} required/>
 
                                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                                     <Button variant="contained" color="success"  onClick={handleSubmit} disabled={loader} >
@@ -182,7 +195,8 @@ const Form_inscrip = () => {
     };
 
     return (
-        <Box sx={{ p: 3 }}>
+        <>
+            <Box sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <IconButton onClick={handleGoBack} sx={{ mr: 2 }}>
                     <ArrowBackIosNewIcon />
@@ -191,8 +205,14 @@ const Form_inscrip = () => {
                     {actionType === 'inscription' ? 'Formulaire d\'Inscription' : 'Formulaire de Réinscription'}
                 </Typography>
             </Box>
-            {renderFormFields()}
-        </Box>
+                {renderFormFields()}
+            </Box>
+            <Popup
+            message={message}
+            setShowPopup={setShowPopup}
+            showPopup={showPopup}
+            />
+        </>
     );
 };
 

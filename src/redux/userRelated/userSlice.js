@@ -87,6 +87,13 @@ const userSlice = createSlice({
       state.error = null;
       state.response = null;
     },
+    inscriptionSuccess: (state, action) => {
+      state.status = "success";
+      state.eleve = action.payload[0];
+      state.eleveClasse = action.payload[1];
+      state.response = null;
+      state.error = null;
+    },
     getRequest: (state) => {
       state.loading = true;
     },
@@ -127,6 +134,7 @@ export const {
   getClasseSuccess,
   getDeleteSuccess,
   addClassSuccess,
+  inscriptionSuccess,
   getRequest,
   getFailed,
   sendSuccess,

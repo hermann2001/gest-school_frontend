@@ -35,7 +35,8 @@ const Inscription = () => {
             state: {
                 actionType,
                 schoolName: school.name,
-                niveau: school.secondaire,  // Add the niveau (secondaire) information
+                niveau: school.secondaire,
+                schoolId: school.id,
             },
         });
     };

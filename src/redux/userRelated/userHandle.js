@@ -17,6 +17,7 @@ import {
   sendSuccess,
   addClassSuccess,
   getClasseSuccess,
+  inscriptionSuccess,
 } from "./userSlice";
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -194,20 +195,20 @@ export const getClasses = (id) => async (dispatch) => {
   }
 };
 
-// export const registerStudent = (classeData, id) => async (dispatch) => {
-//   dispatch(authRequest());
+export const registerStudent = (formData, id) => async (dispatch) => {
+  dispatch(authRequest());
 
-//   try {
-//     const result = await axios.post(`${api_url}addClasse/${id}`, classeData, {
-//       headers: { "Content-Type": "application/json" },
-//     });
-//     if (!result.data.success) {
-//       dispatch(getFailed(result.data.message));
-//     } else {
-//       dispatch(addClassSuccess());
-//     }
-//   } catch (error) {
-//     const errorMessage = error.response?.data?.message || error.message;
-//     dispatch(getError({ message: errorMessage }));
-//   }
-// };
+  try {
+    const result = await axios.post(`${api_url}inscription/${id}`, formData, {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!result.data.success) {
+      dispatch(authFailed(result.data.message));
+    } else {
+      dispatch(inscriptionSuccess(result.data.eleve));
+    }
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message;
+    dispatch(authError(error));
+  }
+};
