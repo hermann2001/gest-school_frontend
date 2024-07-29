@@ -148,14 +148,14 @@ const AddSchool = () => {
               onChange={handleChangeSec}
             >
               <FormControlLabel
-                value="1"
-                control={<Radio />}
-                label="Secondaire"
-              />
-              <FormControlLabel
                 value="0"
                 control={<Radio />}
                 label="Primaire"
+              />
+              <FormControlLabel
+                value="1"
+                control={<Radio />}
+                label="Secondaire"
               />
             </StyledRadioField>
 

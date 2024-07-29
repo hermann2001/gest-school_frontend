@@ -134,7 +134,9 @@ const ListClass = () => {
                         <Box sx={{ width: '100%' }}>
                             <TextField fullWidth type="text" label="Niveau d'étude" value={selectedLevel} sx={{ mb: 2, display: 'none' }} />
                             <TextField fullWidth type="text" label="Nom de la classe" value={className} onChange={(e) => setClassName(e.target.value)} sx={{ mb: 2 }} required />
-                            <TextField fullWidth type="text" label="Série" value={classSerie} onChange={(e) => setClassSerie(e.target.value)} sx={{ mb: 2 }} />
+                            {schoolType === 1 && (
+                                <TextField fullWidth type="text" label="Série" value={classSerie} onChange={(e) => setClassSerie(e.target.value)} sx={{ mb: 2 }} />
+                            )}                            
                             <TextField fullWidth type="number" label="Effectif" value={classSize} onChange={(e) => setClassSize(e.target.value)} sx={{ mb: 2 }} required />
                             <Button variant="contained" color="primary" onClick={handleAddClass} fullWidth>
                                 Ajouter la classe

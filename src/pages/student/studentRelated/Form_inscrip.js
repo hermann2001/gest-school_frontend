@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Button, Card, CardContent, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material';
+import { Box, Typography, TextField, Button, Card, CardContent, FormControl, InputLabel, Select, MenuItem, IconButton, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { registerStudent } from '../../../redux/userRelated/userHandle';
@@ -42,58 +42,82 @@ const Form_inscrip = () => {
     const [loader, setLoader] = useState(false);
     const [message, setMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoader(true);
-      
+        
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(parent_mail)) {
-          setMessage("Veuillez entrer une adresse email valide.");
-          setShowPopup(true);
-          setLoader(false);
-          return;
+            setMessage("Veuillez entrer une adresse email valide.");
+            setShowPopup(true);
+            setLoader(false);
+            return;
         }
-      
-        const formData = {
-          nom,
-          prenoms,
-          sexe,
-          birthday,
-          adresse,
-          level,
-          serie,
-          academic_year,
-          name_pere,
-          name_mere,
-          parent_mail,
-          parent_telephone,
-        };
-      
-        dispatch(registerStudent(formData, schoolId));
-      };
+        
+        setShowPaymentModal(true); // Show payment modal before submitting the form
+    };
 
-      useEffect(() => {
+    const handlePaymentChoice = (choice) => {
+        setShowPaymentModal(false);
+        if (choice === 'yes') {
+            const formData = {
+                nom,
+                prenoms,
+                sexe,
+                birthday,
+                adresse,
+                level,
+                serie,
+                academic_year,
+                name_pere,
+                name_mere,
+                parent_mail,
+                parent_telephone,
+            };
+            dispatch(registerStudent(formData, schoolId));
+            navigate('/payment-page');
+        } else {
+            const formData = {
+                nom,
+                prenoms,
+                sexe,
+                birthday,
+                adresse,
+                level,
+                serie,
+                academic_year,
+                name_pere,
+                name_mere,
+                parent_mail,
+                parent_telephone,
+            };
+            dispatch(registerStudent(formData, schoolId));
+        }
+    };
+
+    useEffect(() => {
         if (
-          status === "success"
+            status === "success"
         ) {
             setMessage("Inscription réussie !");
             setShowPopup(true);
+            navigate(-1);
         } else if (status === "failed") {
-          setMessage(response);
-          setShowPopup(true);
-          setLoader(false);
+            setMessage(response);
+            setShowPopup(true);
+            setLoader(false);
         } else if (status === "error") {
-          setMessage(error.response.data.message);
-          setShowPopup(true);
-          setLoader(false);
+            setMessage(error.response.data.message);
+            setShowPopup(true);
+            setLoader(false);
         }
-      }, [status, eleve, navigate, response, eleveClasse]);
+    }, [status, eleve, navigate, response, eleveClasse]);
       
 
-
     const handleGoBack = () => {
-        navigate(-1); // Navigate back to the previous page
+        navigate(-1);
     };
 
     const getNiveauLabel = (niveau) => {
@@ -160,7 +184,7 @@ const Form_inscrip = () => {
 
                                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                                     <Button variant="contained" color="success"  onClick={handleSubmit} disabled={loader} >
-                                        Soumettre l'inscription
+                                    {loader ? 'Chargement...' : 'Soumettre l\'inscription'}
                                     </Button>
                                 </Box>
                             </Box>
@@ -197,21 +221,31 @@ const Form_inscrip = () => {
     return (
         <>
             <Box sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <IconButton onClick={handleGoBack} sx={{ mr: 2 }}>
-                    <ArrowBackIosNewIcon />
-                </IconButton>
-                <Typography variant="h4">
-                    {actionType === 'inscription' ? 'Formulaire d\'Inscription' : 'Formulaire de Réinscription'}
-                </Typography>
-            </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <IconButton onClick={handleGoBack} sx={{ mr: 2 }}>
+                        <ArrowBackIosNewIcon />
+                    </IconButton>
+                    <Typography variant="h5">
+                        {actionType === 'inscription' ? 'Formulaire d\'Inscription' : 'Formulaire de Réinscription'}
+                    </Typography>
+                </Box>
                 {renderFormFields()}
             </Box>
-            <Popup
-            message={message}
-            setShowPopup={setShowPopup}
-            showPopup={showPopup}
-            />
+            <Popup message={message} showPopup={showPopup} setShowPopup={setShowPopup} status={status} />
+            <Dialog open={showPaymentModal} onClose={() => setShowPaymentModal(false)}>
+                <DialogTitle color={"primary"}>Confirmation de Paiement</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        Voulez-vous payer les frais d'inscription maintenant?
+                        <br />
+                        Vérifiez votre boîte mail pour télécharger votre fiche d'inscription. 
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handlePaymentChoice('no')} color="error">Non</Button>
+                    <Button onClick={() => handlePaymentChoice('yes')} color="primary">Oui</Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 };
