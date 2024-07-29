@@ -1,29 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Box, TextField, Button, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Collapse, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Button, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Collapse, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
-
-
-
-const schoolData = [
-  {
-    nom: 'École A',
-    details: [
-      { classe: 'Classe 1', anneeScolaire: '2023-2024', fraisReinscription: '100€', fraisInscription: '150€', fraisScolarite: '200€', fraisAnnexe: '50€' },
-      { classe: 'Classe 2', anneeScolaire: '2023-2024', fraisReinscription: '110€', fraisInscription: '160€', fraisScolarite: '210€', fraisAnnexe: '60€' },
-      // Ajoutez d'autres classes ici
-    ]
-  },
-  {
-    nom: 'École B',
-    details: [
-      { classe: 'Classe 1', anneeScolaire: '2023-2024', fraisReinscription: '120€', fraisInscription: '170€', fraisScolarite: '220€', fraisAnnexe: '70€' },
-      { classe: 'Classe 2', anneeScolaire: '2023-2024', fraisReinscription: '130€', fraisInscription: '180€', fraisScolarite: '230€', fraisAnnexe: '80€' },
-      // Ajoutez d'autres classes ici
-    ]
-  },
-  // Ajoutez d'autres écoles ici
-];
+import { fetchData } from '../api';
 
 const CustomTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: 'bold',
@@ -41,9 +20,6 @@ const CustomTableRow = styled(TableRow)(({ theme }) => ({
 const SchoolTable = ({ school }) => {
   const [open, setOpen] = useState(false);
 
-
- 
-
   return (
     <>
       <TableRow>
@@ -53,7 +29,7 @@ const SchoolTable = ({ school }) => {
           </IconButton>
         </TableCell>
         <CustomTableCell colSpan={6}>
-          {school.nom}
+          {school.name}
         </CustomTableCell>
       </TableRow>
       <TableRow>
@@ -64,22 +40,20 @@ const SchoolTable = ({ school }) => {
                 <TableHead>
                   <TableRow>
                     <CustomTableCell>Classe</CustomTableCell>
-                    <CustomTableCell>Année Scolaire</CustomTableCell>
-                    <CustomTableCell>Frais de Réinscription</CustomTableCell>
-                    <CustomTableCell>Frais d'Inscription</CustomTableCell>
-                    <CustomTableCell>Frais de Scolarité</CustomTableCell>
-                    <CustomTableCell>Frais Annexe</CustomTableCell>
+                    <CustomTableCell>Frais de Re/Inscription</CustomTableCell>
+                    <CustomTableCell>Frais de Formation</CustomTableCell>
+                    <CustomTableCell>Frais Annexes</CustomTableCell>
+                    <CustomTableCell>Frais Total</CustomTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {school.details.map((detail, index) => (
+                  {school.classeWithMontant.map((classeMontant, index) => (
                     <CustomTableRow key={index}>
-                      <TableCell>{detail.classe}</TableCell>
-                      <TableCell>{detail.anneeScolaire}</TableCell>
-                      <TableCell>{detail.fraisReinscription}</TableCell>
-                      <TableCell>{detail.fraisInscription}</TableCell>
-                      <TableCell>{detail.fraisScolarite}</TableCell>
-                      <TableCell>{detail.fraisAnnexe}</TableCell>
+                      <TableCell>{classeMontant.classe.name}</TableCell>
+                      <TableCell>{classeMontant.montant ? classeMontant.montant.frais_inscription : 0}</TableCell>
+                      <TableCell>{classeMontant.montant  ? classeMontant.montant.frais_formation : 0}</TableCell>
+                      <TableCell>{classeMontant.montant ? classeMontant.montant.frais_annexe : 0}</TableCell>
+                      <TableCell>{(classeMontant.montant ? parseInt(classeMontant.montant.frais_inscription)  : 0) + (classeMontant.montant ? parseInt(classeMontant.montant.frais_formation ): 0) + (classeMontant.montant ? parseInt(classeMontant.montant.frais_annexe) : 0)}</TableCell>
                     </CustomTableRow>
                   ))}
                 </TableBody>
@@ -93,45 +67,39 @@ const SchoolTable = ({ school }) => {
 };
 
 const SchoolPage = () => {
+  const [data, setData] = useState([]);
   const [selectedSchool, setSelectedSchool] = useState(null);
-  
-  const [data, setData] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchData()
+      .then(response => {
+        setData(response.data);
+        setLoading(false);
+      })
+      .catch(error => {
+        setError(error);
+        setLoading(false);
+      });
+  }, []);
+
+  console.log(data);
 
   const handleSchoolClick = (school) => {
     setSelectedSchool(school);
   };
-
-  // useEffect(async () => {
-  //   const tre = () => {
-      
-  //   try {
-  //     console.log("3gjh")
-  //     // const response = await fetch("http://172.17.0.1:8000/api/schools")
-  //     // const data = await response.json()
-
-  //     // console.log(data)
-  
-  //     // setData(data)
-  //   } catch (error) {
-  //     console.error(error)
-      
-  //   }finally{
-  //     //alert("fygvbh")
-  //   }
-  //   }
-
-
-  //   tre();
-  // },[])
 
   return (
     <Box sx={{ maxWidth: 1000, mx: 'auto', p: 4, boxShadow: 5, borderRadius: 2, backgroundColor: '#fff' }}>
       <Typography variant="h4" component="h3" sx={{ textAlign: 'center', fontWeight: 'bold', mb: 3 }}>
         Rechercher les Frais de votre Ecole !
       </Typography>
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error.message}</p>}
       {!selectedSchool ? (
         <List>
-          {schoolData.map((school, index) => (
+          {data.map((school, index) => (
             <ListItem button key={index} onClick={() => handleSchoolClick(school)}>
               <ListItemText primary={school.nom} />
             </ListItem>
