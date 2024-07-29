@@ -61,38 +61,25 @@ const Form_inscrip = () => {
 
     const handlePaymentChoice = (choice) => {
         setShowPaymentModal(false);
+        const formData = {
+            nom,
+            prenoms,
+            sexe,
+            birthday,
+            adresse,
+            level,
+            serie,
+            academic_year,
+            name_pere,
+            name_mere,
+            parent_mail,
+            parent_telephone,
+        };
+
         if (choice === 'yes') {
-            const formData = {
-                nom,
-                prenoms,
-                sexe,
-                birthday,
-                adresse,
-                level,
-                serie,
-                academic_year,
-                name_pere,
-                name_mere,
-                parent_mail,
-                parent_telephone,
-            };
             dispatch(registerStudent(formData, schoolId));
             navigate('/payment-page');
         } else {
-            const formData = {
-                nom,
-                prenoms,
-                sexe,
-                birthday,
-                adresse,
-                level,
-                serie,
-                academic_year,
-                name_pere,
-                name_mere,
-                parent_mail,
-                parent_telephone,
-            };
             dispatch(registerStudent(formData, schoolId));
         }
     };
@@ -125,6 +112,8 @@ const Form_inscrip = () => {
     };
 
     const renderFormFields = () => {
+        const niveauxPrimaire = ['Maternelle', 'CI', 'CP', 'CE1', 'CE2', 'CM1', 'CM2'];
+        const niveauxSecondaire = ['6e', '5e', '4e', '3e', '2nde', '1ere', 'Tle'];
         if (actionType === 'inscription') {
             return (
                 <>
@@ -150,25 +139,25 @@ const Form_inscrip = () => {
                                 <FormControl fullWidth sx={{ mb: 2 }}>
                                     <InputLabel id="grade-label">Niveau</InputLabel>
                                     <Select labelId="grade-label" id="grade-select" label="Niveau" value={level} onChange={(e) => setNiveau(e.target.value)} required>
-                                        <MenuItem value={1}>Maternelle</MenuItem><MenuItem value={2}>CI</MenuItem><MenuItem value={3}>CP</MenuItem>
-                                        <MenuItem value={4}>CE1</MenuItem><MenuItem value={5}>CE2</MenuItem><MenuItem value={6}>CM1</MenuItem>
-                                        <MenuItem value={7}>CM2</MenuItem><MenuItem value={8}>6e</MenuItem><MenuItem value={9}>5e</MenuItem>
-                                        <MenuItem value={10}>4e</MenuItem><MenuItem value={11}>3e</MenuItem><MenuItem value={12}>2nde</MenuItem>
-                                        <MenuItem value={13}>1ere</MenuItem><MenuItem value={14}>Tle</MenuItem>
+                                        {(niveau === 0 ? niveauxPrimaire : niveauxSecondaire).map((niveau, index) => (
+                                            <MenuItem key={index} value={index + 1}>{niveau}</MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
-                                <FormControl fullWidth sx={{ mb: 2 }}>
-                                    <InputLabel id="series-label">Série</InputLabel>
-                                    <Select labelId="series-label" id="series-select" label="Série" value={serie} onChange={(e) => setSerie(e.target.value)} >
-                                        <MenuItem value="A">A</MenuItem>
-                                        <MenuItem value="B">B</MenuItem>
-                                        <MenuItem value="C">C</MenuItem>
-                                        <MenuItem value="D">D</MenuItem>
-                                        <MenuItem value="G2">G2</MenuItem>
-                                        <MenuItem value="E">E</MenuItem>
-                                        <MenuItem value="F">F</MenuItem>
-                                    </Select>
-                                </FormControl>
+                                {niveau !== 0 && (
+                                    <FormControl fullWidth sx={{ mb: 2 }}>
+                                        <InputLabel id="series-label">Série</InputLabel>
+                                        <Select labelId="series-label" id="series-select" label="Série" value={serie} onChange={(e) => setSerie(e.target.value)}>
+                                            <MenuItem value="A">A</MenuItem>
+                                            <MenuItem value="B">B</MenuItem>
+                                            <MenuItem value="C">C</MenuItem>
+                                            <MenuItem value="D">D</MenuItem>
+                                            <MenuItem value="G2">G2</MenuItem>
+                                            <MenuItem value="E">E</MenuItem>
+                                            <MenuItem value="F">F</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                )}
                                 <FormControl fullWidth sx={{ mb: 2 }}>
                                     <InputLabel id="academic-year-label">Année académique</InputLabel>
                                     <Select labelId="academic-year-label" id="academic-year-select" label="Année académique"  value={academic_year} onChange={(e) => setAnneeAcademique(e.target.value)} required>

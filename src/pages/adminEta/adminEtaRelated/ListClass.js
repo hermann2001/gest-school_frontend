@@ -101,13 +101,7 @@ const ListClass = () => {
     return (
         <>
         <Box sx={{ p: 3 }}>
-            <Card sx={{ mb: 4, backgroundColor: '#0E70DB', color: 'white', display: 'flex', alignItems: 'center' }}>
-                <PlayArrowIcon sx={{ mr: 2 }}/>
-                <Typography variant="h5">
-                    Créer les classes de l'établissement 
-                </Typography>
-            </Card>
-            
+
             <Box sx={{ mb: 5, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                 {categories[categoryKey]?.map((level) => (
                     <Card key={level} sx={{ minWidth: 163 }}>
@@ -145,13 +139,6 @@ const ListClass = () => {
                     </CardContent>
                 </Card>
             )}
-
-            <Card sx={{ mt: 3, mb: 3, backgroundColor: '#0E70DB', color: 'white', display: 'flex', alignItems: 'center' }}>
-                <PlayArrowIcon sx={{ mr: 2 }}/>
-                <Typography variant="h5">
-                Classes disponibles
-                </Typography>
-            </Card>
             
             {Object.keys(sortedClassesByLevel).length === 0 ? (
                 <Typography variant="h6" color="red" align="center" sx={{ mt: 5 }}>

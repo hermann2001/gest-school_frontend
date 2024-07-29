@@ -24,8 +24,8 @@ const ListStudent = () => {
     const fetchStudentsByLevelAndYear = async (level, year) => {
         // Remplace ceci par un appel API réel
         return [
-        { matricule: '12345', name: 'John', surname: 'Doe', class: level, registrationStatus: 'Accepted', year: year },
-        { matricule: '67890', name: 'Jane', surname: 'Doe', class: level, registrationStatus: 'Rejected', year: year }
+        { matricule: '12345', name: 'John', surname: 'Doe', class: level, year: year },
+        { matricule: '67890', name: 'Jane', surname: 'Doe', class: level, year: year }
         ];
     };
 
@@ -63,7 +63,6 @@ const ListStudent = () => {
                                         <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem'}}>Nom</TableCell>
                                         <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem'}}>Prénom</TableCell>
                                         <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem'}}>Classe</TableCell>
-                                        <TableCell sx={{ fontWeight: 'bold', fontSize: '1rem'}}>Rejet d'inscription</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -78,7 +77,6 @@ const ListStudent = () => {
                                             <TableCell>{student.name}</TableCell>
                                             <TableCell>{student.surname}</TableCell>
                                             <TableCell>{student.class}</TableCell>
-                                            <TableCell>{student.registrationStatus}</TableCell>
                                         </TableRow>
                                         ))
                                     )}
