@@ -11,7 +11,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { AppBar, Drawer } from '../../components/styles';
 
 import SideBar from './SideBar'; 
-import Logout from '../Logout';
+import AcademicYear from './adminRelated/AcademicYear';
 
 import AddSchool from './adminRelated/AddSchool';
 import ShowSchool from './adminRelated/ShowSchool';
@@ -75,8 +75,8 @@ const AdminDashboard = () => {
                     <Route path="home" element={<HomeBoard />} />
                     <Route path="addSchool" element={<AddSchool situation="School" />} />
                     <Route path="showSchool" element={<ShowSchool />} />
+                    <Route path="academicyear" element={<AcademicYear />} />
                     <Route path="notices" element={<Notices />} />
-                    <Route path="logout" element={<Logout />} />
                     <Route path="*" element={<Navigate to="home" />} />
                 </Routes>
             </Box>

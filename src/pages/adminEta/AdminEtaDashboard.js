@@ -11,7 +11,6 @@ import { AppBar, Drawer } from '../../components/styles';
 
 import ListClass from './adminEtaRelated/ListClass';
 import ListStudent from './adminEtaRelated/ListStudent';
-import AcademicYear from './adminEtaRelated/AcademicYear';
 import Schooling from './adminEtaRelated/Schooling';
 import SideBarAdmin from './SideBarAdmin';
 
@@ -93,7 +92,6 @@ const AdminEtaDashboard = () => {
                     <Route path="/" element={<Navigate to="listStudent" />} />
                     <Route path="listStudent" element={<ListStudent />} />
                     <Route path="listClass" element={<ListClass />} />
-                    <Route path="academicyear" element={<AcademicYear />} />
                     <Route path="schooling" element={<Schooling />} />
                     {/* <Route path="notices" element={<Notices />} /> */}
                     <Route path="*" element={<Navigate to="listStudent" />} />

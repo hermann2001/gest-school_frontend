@@ -4,7 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import ListIcon from '@mui/icons-material/List';
 import ClassIcon from '@mui/icons-material/Class';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PaidIcon from '@mui/icons-material/Paid';
 import AnnouncementOutlinedIcon from '@mui/icons-material/AnnouncementOutlined';
 import { useSelector } from 'react-redux';
@@ -37,13 +36,6 @@ const SideBarAdmin = () => {
                     <ClassIcon color={location.pathname.startsWith("/listClass") ? 'primary' : 'inherit'} />
                 </ListItemIcon>
                 <ListItemText primary="Liste des classes" />
-            </ListItemButton>
-
-            <ListItemButton component={Link} to="/academicyear">
-                <ListItemIcon>
-                    <CalendarMonthIcon color={location.pathname.startsWith("/academicyear") ? 'primary' : 'inherit'} />
-                </ListItemIcon>
-                <ListItemText primary="Année académique" />
             </ListItemButton>
 
             <ListItemButton component={Link} to="/schooling">

@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import HomeIcon from "@mui/icons-material/Home";
 import SchoolIcon from "@mui/icons-material/School";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AnnouncementOutlinedIcon from '@mui/icons-material/AnnouncementOutlined';
 import { useSelector } from 'react-redux';
 
@@ -35,6 +36,13 @@ const SideBar = () => {
                     <SchoolIcon color={location.pathname.startsWith("/addSchool") || location.pathname.startsWith("/showSchool") ? 'primary' : 'inherit'} />
                 </ListItemIcon>
                 <ListItemText primary="Ecoles" />
+            </ListItemButton>
+
+            <ListItemButton component={Link} to="/academicyear">
+                <ListItemIcon>
+                    <CalendarMonthIcon color={location.pathname.startsWith("/academicyear") ? 'primary' : 'inherit'} />
+                </ListItemIcon>
+                <ListItemText primary="Année académique" />
             </ListItemButton>
 
             <ListItemButton component={Link} to="/notices">
