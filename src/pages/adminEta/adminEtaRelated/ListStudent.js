@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {  Box, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Card, CardContent, Paper, Typography  } from '@mui/material';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-const levels = ["Maternelle", "CI", "CP", "CE1", "CE2", "CM1", "CM2", "6e", "5e", "4e", "3e", "2nde", "1ere", "Tle"];
+const primaryLevels = ["Maternelle", "CI", "CP", "CE1", "CE2", "CM1", "CM2"];
+const secondaryLevels = ["6e", "5e", "4e", "3e", "2nde", "1ere", "Tle"];
 
-const years = ["2023-2024", "2024-2025", "2025-2026"]; // Liste des années scolaires
+const years = ["2023-2024", "2024-2025", "2025-2026"];
 
 const ListStudent = () => {
     const [selectedLevel, setSelectedLevel] = useState("");
     const [selectedYear, setSelectedYear] = useState("");
     const [students, setStudents] = useState([]);
+    const currentUser = useSelector((state) => state.user.currentUser);
+
+    const schoolType = currentUser?.secondaire;
+    const levels = schoolType === 1 ? secondaryLevels : primaryLevels;
 
     useEffect(() => {
         if (selectedLevel && selectedYear) {
@@ -31,21 +36,15 @@ const ListStudent = () => {
 
     return (
         <Box sx={{ p: 3 }}>
-            <Card sx={{ mb: 2, backgroundColor: '#0E70DB', color: 'white', display: 'flex', alignItems: 'center' }}>
-                <PlayArrowIcon sx={{ mr: 2 }}/>
-                <Typography variant="h5">
-                    Liste des élèves par niveau et année scolaire
-                </Typography>
-            </Card>
 
             <Box sx={{ mb: 2, maxWidth: 900, width: '100%', mx: 'auto', display: 'flex', gap: 2 }}>
-                <Select fullWidth value={selectedLevel} onChange={(e) => setSelectedLevel(e.target.value)} displayEmpty sx={{ flex: 1 }} >
+                <Select fullWidth value={selectedLevel} onChange={(e) => setSelectedLevel(e.target.value)} displayEmpty sx={{ flex: 1 }}>
                     <MenuItem value="" disabled>Sélectionner un niveau</MenuItem>
-                    {levels.map((level) => ( <MenuItem key={level} value={level}>{level}</MenuItem> ))}
+                    {levels.map((level) => (<MenuItem key={level} value={level}>{level}</MenuItem>))}
                 </Select>
-                <Select fullWidth value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} displayEmpty sx={{ flex: 1 }} >
+                <Select fullWidth value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} displayEmpty sx={{ flex: 1 }}>
                     <MenuItem value="" disabled>Sélectionner une année scolaire</MenuItem>
-                    {years.map((year) => ( <MenuItem key={year} value={year}>{year}</MenuItem> ))}
+                    {years.map((year) => (<MenuItem key={year} value={year}>{year}</MenuItem>))}
                 </Select>
             </Box>
 

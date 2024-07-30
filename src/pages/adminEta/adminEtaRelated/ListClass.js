@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Typography, Box, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Card, CardContent, TableSortLabel, IconButton, CardActionArea } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { addClass, getAllSchools, getClasses } from '../../../redux/userRelated/userHandle';
 import Popup from '../../../components/Popup';
 
@@ -74,6 +73,7 @@ const ListClass = () => {
             setShowForm(false); 
         });
     };
+
     const classesByLevel = Array.isArray(classes) ? classes.reduce((acc, classItem) => {
         if (!acc[classItem.level]) {
             acc[classItem.level] = [];
