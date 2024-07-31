@@ -18,6 +18,8 @@ import {
   addClassSuccess,
   getClasseSuccess,
   inscriptionSuccess,
+  getCYearSuccess,
+  createYSuccess,
 } from "./userSlice";
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -181,7 +183,6 @@ export const addClass = (classeData, id) => async (dispatch) => {
   }
 };
 
-
 export const getClasses = (id) => async (dispatch) => {
   try {
     const result = await axios.get(`${api_url}getClasses/${id}`, {
@@ -210,5 +211,39 @@ export const registerStudent = (formData, id) => async (dispatch) => {
   } catch (error) {
     const errorMessage = error.response?.data?.message || error.message;
     dispatch(authError(error));
+  }
+};
+
+export const newAcademicYear = (formData) => async (dispatch) => {
+  dispatch(authRequest());
+
+  try {
+    const result = await axios.post(`${api_url}newAcademicYear`, formData, {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (result.data.success) {
+      dispatch(createYSuccess(result.data.message));
+    } else {
+      dispatch(getFailed(result.data.message));
+    }
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    dispatch(getError(error));
+  }
+};
+
+export const getCurrentYear = () => async (dispatch) => {
+  try {
+    const result = await axios.get(`${api_url}currentAcademicYear`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (result.data.success) {
+      dispatch(getCYearSuccess(result.data.yearA));
+    } else {
+      dispatch(getFailed(result.data.message));
+    }
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    dispatch(getError(error));
   }
 };

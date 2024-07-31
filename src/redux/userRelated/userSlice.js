@@ -10,6 +10,7 @@ const initialState = {
   response: null,
   darkMode: true,
   schools: [],
+  currentYear: [],
   classes: [],
   loading: false,
 };
@@ -58,15 +59,25 @@ const userSlice = createSlice({
       state.error = null;
       state.currentRole = null;
     },
-
+    createYSuccess: (state, action) => {
+      state.loading = true;
+      state.error = null;
+      state.status = action.payload;
+    },
     doneSuccess: (state, action) => {
       state.userDetails = action.payload;
       state.loading = false;
       state.error = null;
-      state.response = null;
+      state.response = action.payload;
     },
     getSuccess: (state, action) => {
       state.schools = action.payload;
+      state.loading = false;
+      state.error = null;
+      state.response = null;
+    },
+    getCYearSuccess: (state, action) => {
+      state.currentYear = action.payload;
       state.loading = false;
       state.error = null;
       state.response = null;
@@ -111,10 +122,6 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    getError: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
     toggleDarkMode: (state) => {
       state.darkMode = !state.darkMode;
     },
@@ -131,6 +138,8 @@ export const {
   authLogout,
   doneSuccess,
   getSuccess,
+  createYSuccess,
+  getCYearSuccess,
   getClasseSuccess,
   getDeleteSuccess,
   addClassSuccess,
