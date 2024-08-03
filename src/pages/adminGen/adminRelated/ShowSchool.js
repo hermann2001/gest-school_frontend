@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,10 +19,6 @@ const ShowSchool = () => {
   const { schools, loading, error, response } = useSelector(
     (state) => state.user
   );
-
-  useEffect(() => {
-    dispatch(getAllSchools());
-  }, [dispatch]);
 
   if (error) {
     console.log(error);

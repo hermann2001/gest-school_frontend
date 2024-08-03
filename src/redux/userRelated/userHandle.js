@@ -20,6 +20,10 @@ import {
   inscriptionSuccess,
   getCYearSuccess,
   createYSuccess,
+  getAYSuccess,
+  getFraisYearSuccess,
+  createFSuccess,
+  getFailedF,
 } from "./userSlice";
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -239,6 +243,56 @@ export const getCurrentYear = () => async (dispatch) => {
     });
     if (result.data.success) {
       dispatch(getCYearSuccess(result.data.yearA));
+    } else {
+      dispatch(getFailed(result.data.message));
+    }
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    dispatch(getError(error));
+  }
+};
+
+export const getAllYears = () => async (dispatch) => {
+  try {
+    const result = await axios.get(`${api_url}allAcademicsYears`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    dispatch(getAYSuccess(result.data));
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    dispatch(authFailed("Erreur de récupération des années académiques !"));
+  }
+};
+
+export const getFraisYear = (level, idSchool) => async (dispatch) => {
+  try {
+    const result = await axios.get(`${api_url}getFrais/${level}/${idSchool}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (result.data.success) {
+      dispatch(getFraisYearSuccess(result.data.yearFrais));
+    } else {
+      dispatch(getFailedF(result.data.message));
+    }
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    dispatch(getError(error));
+  }
+};
+
+export const newFraisYear = (formData, up, idSchool) => async (dispatch) => {
+  dispatch(authRequest());
+
+  try {
+    const result = up
+      ? await axios.post(`${api_url}updateFrais`, formData, {
+          headers: { "Content-Type": "application/json" },
+        })
+      : await axios.post(`${api_url}addFrais/${idSchool}`, formData, {
+          headers: { "Content-Type": "application/json" },
+        });
+    if (result.data.success) {
+      dispatch(createFSuccess(result.data.message));
     } else {
       dispatch(getFailed(result.data.message));
     }

@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   status: "idle",
+  statusCY: null,
+  statusF: null,
   userDetails: [],
   tempDetails: [],
   currentUser: JSON.parse(localStorage.getItem("user")) || null,
@@ -10,7 +12,9 @@ const initialState = {
   response: null,
   darkMode: true,
   schools: [],
-  currentYear: [],
+  currentYear: null,
+  frais: null,
+  years: [],
   classes: [],
   loading: false,
 };
@@ -60,9 +64,14 @@ const userSlice = createSlice({
       state.currentRole = null;
     },
     createYSuccess: (state, action) => {
-      state.loading = true;
+      state.loading = false;
       state.error = null;
-      state.status = action.payload;
+      state.statusCY = action.payload;
+    },
+    createFSuccess: (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.statusF = action.payload;
     },
     doneSuccess: (state, action) => {
       state.userDetails = action.payload;
@@ -76,8 +85,20 @@ const userSlice = createSlice({
       state.error = null;
       state.response = null;
     },
+    getAYSuccess: (state, action) => {
+      state.years = action.payload;
+      state.loading = false;
+      state.error = null;
+      state.response = null;
+    },
     getCYearSuccess: (state, action) => {
       state.currentYear = action.payload;
+      state.loading = false;
+      state.error = null;
+      state.response = null;
+    },
+    getFraisYearSuccess: (state, action) => {
+      state.frais = action.payload;
       state.loading = false;
       state.error = null;
       state.response = null;
@@ -113,6 +134,12 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    getFailedF: (state, action) => {
+      state.response = action.payload;
+      state.loading = false;
+      state.error = null;
+      state.frais = null;
+    },
     getError: (state, action) => {
       state.loading = false;
       state.error = action.payload;
@@ -138,14 +165,18 @@ export const {
   authLogout,
   doneSuccess,
   getSuccess,
+  getAYSuccess,
   createYSuccess,
+  createFSuccess,
   getCYearSuccess,
+  getFraisYearSuccess,
   getClasseSuccess,
   getDeleteSuccess,
   addClassSuccess,
   inscriptionSuccess,
   getRequest,
   getFailed,
+  getFailedF,
   sendSuccess,
   getError,
   toggleDarkMode,

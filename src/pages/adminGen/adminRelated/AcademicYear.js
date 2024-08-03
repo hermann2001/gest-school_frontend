@@ -15,14 +15,23 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Popup from "../../../components/Popup";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 const AcademicYear = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { currentYear, loading, error, response, status } = useSelector(
+  const { currentYear, loading, error, response, statusCY } = useSelector(
     (state) => state.user
   );
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date)) return "";
+    return format(date, "dd MMMM yyyy", { locale: fr });
+  };
 
   useEffect(() => {
     dispatch(getCurrentYear());
@@ -52,8 +61,8 @@ const AcademicYear = () => {
   };
 
   useEffect(() => {
-    if (status) {
-      setMessage(status);
+    if (statusCY) {
+      setMessage(statusCY);
       setShowPopup(true);
       setLoader(false);
     } else if (response) {
@@ -65,7 +74,7 @@ const AcademicYear = () => {
       setShowPopup(true);
       setLoader(false);
     }
-  }, [status, navigate, error, response, dispatch]);
+  }, [statusCY, navigate, error, response, dispatch]);
 
   return (
     <>
@@ -74,17 +83,19 @@ const AcademicYear = () => {
       ) : (
         <>
           <Box sx={{ mt: 15, p: 3, maxWidth: 600, mx: "auto" }}>
-            {currentYear.length > 0 && (
+            {currentYear && (
               <div
                 style={{
                   textAlign: "center",
                   fontSize: 20,
-                  fontWeight: "bold",
                 }}
               >
-                <div>Année académique actuelle : {currentYear.name}</div>
                 <div>
-                  Du {currentYear.date_debut} au {currentYear.date_fin}
+                  Année académique actuelle : <b>{currentYear.name}</b>
+                </div>
+                <div>
+                  Du <b>{formatDate(currentYear.date_debut)}</b> au{" "}
+                  <b>{formatDate(currentYear.date_fin)}</b>
                 </div>
               </div>
             )}

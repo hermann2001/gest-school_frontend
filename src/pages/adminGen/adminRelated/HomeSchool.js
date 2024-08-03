@@ -1,7 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllSchools } from "../../../redux/userRelated/userHandle";
-import { Grid, Card, CardContent, CardMedia, Typography, Box, } from "@mui/material";
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Box,
+} from "@mui/material";
 
 const HomeBoard = () => {
   const dispatch = useDispatch();
@@ -10,10 +16,6 @@ const HomeBoard = () => {
   const nivSchool = (sec) => {
     return sec ? "Secondaire" : "Primaire";
   };
-
-  useEffect(() => {
-    dispatch(getAllSchools());
-  }, [dispatch]);
 
   if (loading) {
     return <div>Loading...</div>;
