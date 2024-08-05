@@ -71,6 +71,15 @@ const AddSchool = () => {
       return;
     }
 
+    // Vérifiez la taille de la photo (max 2 Mo)
+    if (logo && logo.size > 2 * 1024 * 1024) {
+      // 2 Mo en octets
+      setMessage("La taille du logo ne doit pas dépasser 2 Mo.");
+      setShowPopup(true);
+      setLoader(false);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("secondaire", secondaire);
