@@ -24,6 +24,8 @@ import {
   getFraisYearSuccess,
   createFSuccess,
   getFailedF,
+  getStudentSuccess,
+  reInscriptionSuccess,
 } from "./userSlice";
 
 const api_url = process.env.REACT_APP_API_URL;
@@ -205,7 +207,7 @@ export const registerStudent = (formData, id) => async (dispatch) => {
 
   try {
     const result = await axios.post(`${api_url}inscription/${id}`, formData, {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "multipart/form-data" },
     });
     if (!result.data.success) {
       dispatch(authFailed(result.data.message));
@@ -299,5 +301,39 @@ export const newFraisYear = (formData, up, idSchool) => async (dispatch) => {
   } catch (error) {
     console.error("Erreur lors de la requête :", error);
     dispatch(getError(error));
+  }
+};
+
+export const getStudent = (matricule) => async (dispatch) => {
+  try {
+    const result = await axios.get(`${api_url}getEleveReins/${matricule}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!result.data.success) {
+      dispatch(authFailed(result.data.message));
+    } else {
+      dispatch(getStudentSuccess(result.data.eleve));
+    }
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+    dispatch(getError(error));
+  }
+};
+
+export const reRegisterStudent = (formData) => async (dispatch) => {
+  dispatch(authRequest());
+
+  try {
+    const result = await axios.post(`${api_url}reinscription`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    if (!result.data.success) {
+      dispatch(authFailed(result.data.message));
+    } else {
+      dispatch(reInscriptionSuccess(result.data.eleve));
+    }
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message;
+    dispatch(authError(error));
   }
 };

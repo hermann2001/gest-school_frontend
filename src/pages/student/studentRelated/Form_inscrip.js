@@ -21,7 +21,9 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import {
   getCurrentYear,
   getFraisYear,
+  getStudent,
   registerStudent,
+  reRegisterStudent,
 } from "../../../redux/userRelated/userHandle";
 import Popup from "../../../components/Popup";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,11 +47,14 @@ const Form_inscrip = () => {
   }, [dispatch]);
 
   const [photo, setPhoto] = useState(null);
+  const [photoURL, setPhotoURL] = useState("");
+  const [matricule, setMatricule] = useState("");
   const [nom, setNom] = useState("");
   const [prenoms, setPrenoms] = useState("");
   const [sexe, setSexe] = useState(1);
   const [birthday, setDateNaissance] = useState("");
   const [adresse, setAdresse] = useState("");
+  const [niveaux, setNiveaux] = useState([]);
   const [level, setNiveau] = useState("");
   const [serie, setSerie] = useState("");
   const [name_pere, setNomPere] = useState("");
@@ -61,6 +66,21 @@ const Form_inscrip = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [se, setSe] = useState(false);
+
+  const niveauxPrimaire = [
+    "Maternelle",
+    "CI",
+    "CP",
+    "CE1",
+    "CE2",
+    "CM1",
+    "CM2",
+  ];
+  const niveauxSecondaire = ["6e", "5e", "4e", "3e", "2nde", "1ere", "Tle"];
+
+  useEffect(() => {
+    setNiveaux(niveau === 0 ? niveauxPrimaire : niveauxSecondaire);
+  }, [niveau]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -102,6 +122,45 @@ const Form_inscrip = () => {
     dispatch(registerStudent(formData, schoolId));
   };
 
+  const handleReSubmit = (event) => {
+    event.preventDefault();
+    setLoader(true);
+
+    if (nom) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(parent_mail)) {
+        setMessage("Veuillez entrer une adresse email valide.");
+        setShowPopup(true);
+        setLoader(false);
+        return;
+      }
+
+      // Vérifiez la taille de la photo (max 2 Mo)
+      if (photo && photo.size > 2 * 1024 * 1024) {
+        // 2 Mo en octets
+        setMessage("La taille de la photo ne doit pas dépasser 2 Mo.");
+        setShowPopup(true);
+        setLoader(false);
+        return;
+      }
+
+      const formData = {
+        matricule,
+        photo,
+        adresse,
+        level,
+        serie,
+        academic_year,
+        parent_mail,
+        parent_telephone,
+      };
+
+      dispatch(reRegisterStudent(formData));
+    } else {
+      dispatch(getStudent(matricule));
+    }
+  };
+
   const handlePhotoChange = (event) => {
     setPhoto(event.target.files[0]);
   };
@@ -117,7 +176,6 @@ const Form_inscrip = () => {
   };
 
   useEffect(() => {
-    console.log(level);
     if (level !== "6e" && level !== "5e") {
       setSe(true);
     } else {
@@ -126,7 +184,12 @@ const Form_inscrip = () => {
   }, [level]);
 
   useEffect(() => {
-    if (status === "success") {
+    if (status === "resuccess") {
+      setMessage("Réinscription réussie !");
+      setShowPopup(true);
+      dispatch(getFraisYear(eleveClasse?.level, schoolId));
+      setShowPaymentModal(true); // Show payment modal before submitting the form
+    } else if (status === "success") {
       setMessage("Inscription réussie !");
       setShowPopup(true);
       dispatch(getFraisYear(eleveClasse?.level, schoolId));
@@ -139,8 +202,25 @@ const Form_inscrip = () => {
       setMessage(error.response.data.message);
       setShowPopup(true);
       setLoader(false);
+    } else if (status === "attente") {
+      setLoader(false);
+      setNom(eleve?.nom);
+      setPrenoms(eleve?.prenoms);
+      setAdresse(eleve?.adresse);
+      setEmail(eleve?.parent_email);
+      setContactParents(eleve?.parent_telephone);
+      setPhotoURL(eleve?.photo);
+      if (eleveClasse?.resultat === "Redouble") {
+        setNiveau(eleveClasse?.level);
+      } else if (eleveClasse?.resultat === "Admis") {
+        niveaux.forEach((niv, index) => {
+          if (niv === eleveClasse?.level) {
+            setNiveau(niveaux[index + 1]);
+          }
+        });
+      }
     }
-  }, [status, error, response, eleveClasse, dispatch]);
+  }, [status, error, response, eleve, eleveClasse, dispatch]);
 
   const handleGoBack = () => {
     navigate(-1);
@@ -151,17 +231,6 @@ const Form_inscrip = () => {
   };
 
   const renderFormFields = () => {
-    const niveauxPrimaire = [
-      "Maternelle",
-      "CI",
-      "CP",
-      "CE1",
-      "CE2",
-      "CM1",
-      "CM2",
-    ];
-    const niveauxSecondaire = ["6e", "5e", "4e", "3e", "2nde", "1ere", "Tle"];
-
     if (actionType === "inscription") {
       return (
         <>
@@ -195,15 +264,19 @@ const Form_inscrip = () => {
                     id="logo-upload"
                     onChange={handlePhotoChange}
                   />
-                  <StyledButton htmlFor="logo-upload">
-                    Photo d'identité de l'enfant
-                  </StyledButton>
                   {photo && (
-                    <ImagePreview
-                      src={URL.createObjectURL(photo)}
-                      alt="Photo d'identité"
-                    />
+                    <div>
+                      <ImagePreview
+                        src={URL.createObjectURL(photo)}
+                        alt="Photo d'identité"
+                      />
+                    </div>
                   )}
+                  <div>
+                    <StyledButton htmlFor="logo-upload">
+                      Photo d'identité de l'enfant
+                    </StyledButton>
+                  </div>
                 </FileInputWrapper>
                 <TextField
                   label="Nom"
@@ -267,13 +340,11 @@ const Form_inscrip = () => {
                     onChange={(e) => setNiveau(e.target.value)}
                     required
                   >
-                    {(niveau === 0 ? niveauxPrimaire : niveauxSecondaire).map(
-                      (niv, index) => (
-                        <MenuItem key={index} value={niv}>
-                          {niv}
-                        </MenuItem>
-                      )
-                    )}
+                    {niveaux.map((niv, index) => (
+                      <MenuItem key={index} value={niv}>
+                        {niv}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 {niveau !== 0 && se && (
@@ -373,33 +444,160 @@ const Form_inscrip = () => {
               <Typography
                 variant="h5"
                 gutterBottom
-                sx={{ textAlign: "center" }}
+                sx={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  color: "#0E70DB",
+                }}
               >
-                Formulaire de Réinscription
+                Formulaire de Réinscription dans l'établissement
+                <br />
+                {getNiveauLabel(niveau)} {schoolName}
               </Typography>
               <Box sx={{ width: "100%" }}>
-                {/* Replace with fields specific to re-enrollment */}
+                {nom && (
+                  <FileInputWrapper>
+                    <HiddenFileInput
+                      type="file"
+                      accept="image/*"
+                      id="logo-upload"
+                      onChange={handlePhotoChange}
+                    />
+                    {photo ? (
+                      <div>
+                        <ImagePreview
+                          src={URL.createObjectURL(photo)}
+                          alt="Photo d'identité"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <ImagePreview
+                          src={process.env.REACT_APP_LOGO_URL + photoURL}
+                          alt="Photo d'identité existante"
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <StyledButton htmlFor="logo-upload">
+                        Photo d'identité de l'enfant
+                      </StyledButton>
+                    </div>
+                  </FileInputWrapper>
+                )}
                 <TextField
-                  label="Nom"
+                  label="matricule"
                   variant="outlined"
                   fullWidth
                   sx={{ mb: 2 }}
+                  value={matricule}
+                  onChange={(e) => setMatricule(e.target.value)}
+                  required
+                  disabled={nom ? true : false}
                 />
-                <TextField
-                  label="Prénom"
-                  variant="outlined"
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-                <TextField
-                  label="Adresse"
-                  variant="outlined"
-                  fullWidth
-                  sx={{ mb: 2 }}
-                />
-                <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-                  Soumettre
-                </Button>
+                {nom && (
+                  <>
+                    <TextField
+                      label="Nom"
+                      variant="outlined"
+                      fullWidth
+                      sx={{ mb: 2 }}
+                      value={nom}
+                      required
+                      disabled
+                    />
+                    <TextField
+                      label="Prénoms"
+                      variant="outlined"
+                      fullWidth
+                      sx={{ mb: 2 }}
+                      value={prenoms}
+                      required
+                      disabled
+                    />
+                    <TextField
+                      label="Adresse"
+                      variant="outlined"
+                      fullWidth
+                      sx={{ mb: 2 }}
+                      value={adresse}
+                      onChange={(e) => setAdresse(e.target.value)}
+                      required
+                    />
+                    <TextField
+                      label="Niveau"
+                      variant="outlined"
+                      fullWidth
+                      sx={{ mb: 2 }}
+                      value={level}
+                      required
+                      disabled
+                    />
+                    {niveau !== 0 && se && (
+                      <FormControl fullWidth sx={{ mb: 2 }}>
+                        <InputLabel id="series-label">Série</InputLabel>
+                        <Select
+                          labelId="series-label"
+                          id="series-select"
+                          label="Série"
+                          value={serie}
+                          onChange={(e) => setSerie(e.target.value)}
+                        >
+                          <MenuItem value="A">A</MenuItem>
+                          <MenuItem value="B">B</MenuItem>
+                          <MenuItem value="C">C</MenuItem>
+                          <MenuItem value="D">D</MenuItem>
+                          <MenuItem value="G2">G2</MenuItem>
+                          <MenuItem value="E">E</MenuItem>
+                          <MenuItem value="F">F</MenuItem>
+                        </Select>
+                      </FormControl>
+                    )}
+                    <TextField
+                      label="Année académique"
+                      variant="outlined"
+                      fullWidth
+                      sx={{ mb: 2 }}
+                      value={academic_year}
+                      disabled
+                      required
+                    />
+                    <TextField
+                      label="Adresse mail"
+                      variant="outlined"
+                      fullWidth
+                      sx={{ mb: 2 }}
+                      value={parent_mail}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                    <TextField
+                      label="Contact des parents"
+                      type="number"
+                      variant="outlined"
+                      fullWidth
+                      sx={{ mb: 2 }}
+                      value={parent_telephone}
+                      onChange={(e) => setContactParents(e.target.value)}
+                      required
+                    />
+                  </>
+                )}
+
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleReSubmit}
+                    disabled={loader}
+                  >
+                    {loader
+                      ? "Chargement..."
+                      : nom
+                      ? "Soumettre la réinscription"
+                      : "Retrouver l'enfant"}
+                  </Button>
+                </Box>
               </Box>
             </CardContent>
           </Card>
@@ -437,19 +635,37 @@ const Form_inscrip = () => {
       >
         <DialogTitle color={"primary"}>Confirmation de Paiement</DialogTitle>
         <DialogContent>
-          <Typography>
-            Votre enfant <b>{eleve?.nom + " " + eleve?.prenoms}</b> a été
-            inscrit dans notre établissement avec le numéro matricule{" "}
-            <b>{eleve?.matricule}</b> pour l'année académique{" "}
-            <b>{academic_year}</b> en {eleveClasse?.level}
-            <br />
-            Voulez-vous payer les frais d'inscription qui s'élevent à{" "}
-            <b>{frais?.frais_inscription}</b> maintenant ?
-            <br />
-            <br />
-            Veuillez vérifiez votre boîte mail pour télécharger votre fiche
-            d'inscription.
-          </Typography>
+          {actionType === "inscription" ? (
+            <Typography>
+              Votre enfant <b>{eleve?.nom + " " + eleve?.prenoms}</b> a été
+              inscrit dans notre établissement avec le numéro matricule{" "}
+              <b>{eleve?.matricule}</b> pour l'année académique{" "}
+              <b>{academic_year}</b> en {eleveClasse?.level}
+              <br />
+              Voulez-vous payer les frais d'inscription qui s'élevent à{" "}
+              <b>{frais?.frais_inscription}</b> maintenant ?
+              <br />
+              <br />
+              Veuillez vérifiez votre boîte mail pour télécharger votre fiche
+              d'inscription.
+            </Typography>
+          ) : actionType === "réinscription" ? (
+            <Typography>
+              Votre enfant <b>{eleve?.nom + " " + eleve?.prenoms}</b> a été
+              réinscrit pour l'année académique <b>{academic_year}</b> en{" "}
+              {eleveClasse?.level}.
+              <br /> Son matricule est le <b>{eleve?.matricule}</b>
+              <br />
+              Voulez-vous payer les frais de réinscription qui s'élevent à{" "}
+              <b>{frais?.frais_reinscription}</b> maintenant ?
+              <br />
+              <br />
+              Veuillez vérifiez votre boîte mail pour télécharger votre fiche
+              d'inscription.
+            </Typography>
+          ) : (
+            <Typography>Action inconnu</Typography>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handlePaymentChoice("no")} color="error">
@@ -470,8 +686,7 @@ const FileInputWrapper = styled.div`
   width: 70%;
   max-width: 400px;
   margin: 30px auto 30px auto;
-  display: flex;
-  align-items: center;
+  text-align: center;
 `;
 
 const HiddenFileInput = styled.input`
@@ -493,5 +708,5 @@ const StyledButton = styled.label`
 const ImagePreview = styled.img`
   max-width: 200px;
   max-height: 200px;
-  margin-top: 10px;
+  margin-bottom: 20px;
 `;

@@ -126,6 +126,20 @@ const userSlice = createSlice({
       state.response = null;
       state.error = null;
     },
+    reInscriptionSuccess: (state, action) => {
+      state.status = "resuccess";
+      state.eleve = action.payload[0];
+      state.eleveClasse = action.payload[1];
+      state.response = null;
+      state.error = null;
+    },
+    getStudentSuccess: (state, action) => {
+      state.status = "attente";
+      state.eleve = action.payload[0];
+      state.eleveClasse = action.payload[1];
+      state.response = null;
+      state.error = null;
+    },
     getRequest: (state) => {
       state.loading = true;
     },
@@ -170,10 +184,12 @@ export const {
   createFSuccess,
   getCYearSuccess,
   getFraisYearSuccess,
+  getStudentSuccess,
   getClasseSuccess,
   getDeleteSuccess,
   addClassSuccess,
   inscriptionSuccess,
+  reInscriptionSuccess,
   getRequest,
   getFailed,
   getFailedF,
